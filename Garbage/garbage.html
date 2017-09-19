@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Garbage - hitTests, dragging, images, sound</title>
+<script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+<script>
+	var zon = true; // set to false to turn off console messages from zim
+	var zns = false; // set to true to require zim namespace - eg. new zim.Frame()
+</script>
+<script src="https://d309knd7es5f10.cloudfront.net/zim_6.1.1.js"></script>
+<style>
+	body {background-color:#ccc;}
+</style>
+<script>
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+var color = "#eee";
+
+var frame = new Frame(scaling, width, height, color);
+frame.on("ready", function() {
+	zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+	var stage = frame.stage;
+	var stageW = frame.width;
+	var stageH = frame.height;
+
+
+// put your code here (you can delete this sample code)
+	frame.loadAssets(["paper.png"], "assets/");
+	frame.on("complete", function() {
+
+		var paper = frame.asset("paper.png")
+			.centerReg(stage)
+			.sca(.3)
+			.drag();
+
+		var paper2 = paper.clone()
+			.addTo(stage) // clones get all the properties
+			.sca(.2)
+			.rot(90)
+			.pos( rand(stageW), -300 ) // random numbers
+			.animate({
+				obj:{y:stageH-100},
+				ease:"bounceOut",
+				time:1500,
+				call:function(){
+					paper2.drag({
+						rect:new createjs.Rectangle(0,0,stageW,stageH) // x, y, width, height
+					});
+
+				paper2.on("pressup", function(){
+					zog("pressup");
+
+                                                                                                                           // if (this is true) {do this stuff} // conditional
+
+
+
+
+
+                 if (paper2.hitTestBounds(can, 1) == true ) { // == comparison operator 
+                 	paper2.removeFrom(stage);
+                 	stage.update();
+
+                 } else {
+					paper2.animate({
+						obj:{y:stageH-100},   // animate the y property, animate from where we are to stageHeight
+						ease: "bounceOut",
+						time:1000
+
+					  });
+
+                       }; //end of else statement
+
+
+
+				   }); 
+
+				}
+
+			});
+
+		var margin = 50;
+		var can = new Rectangle(200,300,frame.green)
+			.addTo(stage);
+		can.pos(stageW-can.width-margin, stageH-can.height-margin);
+
+
+
+
+// "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-file-access-from-files
+
+		stage.update(); // this is needed to show any changes
+
+	}); // end of asset loading
+
+}); // end of ready
+
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+</head>
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+<!-- To Fix Browser Error for drag:  // "C":\Users\kouzaevi\AppData\Local\Google\Chrome\Application\chrome.exe" --allow-file-access-from-files -->
+</body>
+</html>
+
+
+
+
+
+
