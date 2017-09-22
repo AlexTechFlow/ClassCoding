@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ZIM Loop</title>
+
+<!-- Welcome to ZIM at http://zimjs.com - Code Interactive Media Pizzazz! 	        -->
+<!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS http://createjs.com -->
+<!-- Founded by Inventor Dan Zen - http://danzen.com - Canadian New Media Award Winner 	-->
+<!-- ZIM is free to use. You can donate to help improve ZIM at http://zimjs.com/donate 	-->
+
+<script src="https://d309knd7es5f10.cloudfront.net/createjs.min.js"></script>
+<script>
+	var zon = true; // set to false to turn off console messages from zim
+	var zns = false; // set to true to require zim namespace - eg. new zim.Frame()
+</script>
+<script src="https://d309knd7es5f10.cloudfront.net/zim_6.2.1.js"></script>
+<!-- use zimjs.com/code/distill for minified individual functions! -->
+
+<style>
+	body {background-color:#ccc;}
+</style>
+
+<script>
+
+// SCALING OPTIONS
+// scaling can have values as follows with full being the default
+// "fit"	sets canvas and stage to dimensions and scales to fit inside window size
+// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
+// "full"	sets stage to window size with no scaling
+// "tagID"	add canvas to HTML tag of ID - set to dimensions if provided - no scaling
+
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+var color = "#ddd";
+
+// as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
+var frame = new Frame(scaling, width, height, color);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+
+    // see http://zimjs.com/code/learn.html for video and code tutorials
+    // see http://zimjs.com/code/docs.html for documentation
+    // see http://zimjs.com/code/bits.html for 64 Interactive Media techniques
+
+    // put your code here (you can delete this sample code)
+
+    // var circles = new Container(stageW, stageH)
+	// 	.addTo(stage)
+	// 	.mov(100, 100)
+	// 	.sca(.5)
+	// 	.outline();
+	//
+	// var circle = new Circle()
+	// 	.addTo(circles)
+	// 	.mov(200,200)
+	// 	.outline();
+
+	var circles = new Container(stageW, stageH)
+		.addTo(stage);
+
+	// for () {} // standard loop
+	// initial condition, condition, post loop operation
+	// for (var i=0; i<10; i++) { // loops fom 0-9
+	// 	for (var j=0; j<5; j++) {
+	// 		zog(i, j);
+	// 	}
+	// }
+
+	var colors = [frame.blue, frame.green, frame.pink, frame.yellow];
+	// loop(colors.length, function(i) {
+	// 	var circle = new Circle(50, colors[i])
+
+	loop(colors, function(color, i, total) {
+		var circle = new Circle(50, color)
+			.addTo(circles)
+			.pos(300 + i*100, stageH/2); // tiling
+			// .pos(rand(stageW), Math.random()*stageH);
+		circle.speed = rand(2,4,false,true);
+	});
+
+	Ticker.add(function() {
+		// var circle;
+		// for (var i=0; i<circles.numChildren; i++) {
+		// 	circle = circles.getChildAt(i);
+		// 	circle.y += 1;
+		// }
+		// circles.getChildAt(0).y += .1;
+		loop(circles, function(circle) {
+			circle.y += circle.speed;
+		});
+	});
+
+	circles.on("click", function(e) { // event object
+		// e.currentTarget.alpha = 0; // is what the event was put on
+		// e.target.alpha = 0; // is what caused the event
+		// e.target.speed = e.target.speed * -1;
+		e.target.speed *= -1;
+	});
+
+    stage.update(); // this is needed to show any changes
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>
