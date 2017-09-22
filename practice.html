@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ZIM Frame - Fit Template</title>
+<!-- Welcome to ZIM at http://zimjs.com - Code Interactive Media Pizzazz! 	        -->
+<!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS http://createjs.com -->
+<!-- Founded by Inventor Dan Zen - http://danzen.com - Canadian New Media Award Winner 	-->
+<!-- ZIM is free to use. You can donate to help improve ZIM at http://zimjs.com/donate 	-->
+<script src="https://d309knd7es5f10.cloudfront.net/createjs.min.js"></script>
+<script>
+	var zon = true; // set to false to turn off console messages from zim
+	var zns = false; // set to true to require zim namespace - eg. new zim.Frame()
+</script>
+<script src="https://d309knd7es5f10.cloudfront.net/zim_6.2.1.js"></script>
+<!-- use zimjs.com/code/distill for minified individual functions! -->
+<style>
+	body {background-color:#ccc;}
+</style>
+<script>
+
+// SCALING OPTIONS
+// scaling can have values as follows with full being the default
+// "fit"	sets canvas and stage to dimensions and scales to fit inside window size
+// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
+// "full"	sets stage to window size with no scaling
+// "tagID"	add canvas to HTML tag of ID - set to dimensions if provided - no scaling
+
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+var color = "#eee";
+
+// as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
+var frame = new Frame(scaling, width, height, color);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+
+ 
+    var blob = new Blob({ //this is object literal - that's why you use commas
+        dblclick:true, 
+        color: frame.blue
+    })
+      
+
+
+        .center(stage) 
+        .mov(0,50); //this is all one statement - that's why you don't need a semicolon
+
+
+
+    function bigger(){
+        blob.sca(blob.scaleX == 1 ? 3 : 1); // ternary operator
+        // if (blob.scaleX == 1) {    // comparison operator - use 2 == signs
+        //     blob.sca(2);
+        // } else {
+        //     blob.sca(1);
+        // };
+
+        // blob.sca(2); //sca for scale
+        stage.update(); 
+    }
+
+    blob.on("click", bigger);
+
+
+    stage.update(); // this is needed to show any changes
+
+
+
+}); // end of ready
+
+
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+</head>
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>
