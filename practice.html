@@ -80,6 +80,7 @@ frame.on("ready", function() {
 
     var rectangles = new Container()
         .addTo(stage);
+        //rectangles.drag();
 
     
     var width = 100;
@@ -89,9 +90,13 @@ frame.on("ready", function() {
     var num = 10;
 
     loop(num, function(i){
-        var rect = new Rectangle (width, height, frame.pink, null, null, 10)
+        var rect = new Rectangle (width, height, frame.pink, null, null, height/2)
         rect.addTo(rectangles)
-        .pos(margin, margin + i*(height + spacing))
+        .pos(margin, margin + i*(height + spacing)
+
+        )
+
+    rect.drag();
 
 
 
