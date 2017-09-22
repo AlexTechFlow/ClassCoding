@@ -41,6 +41,15 @@ frame.on("ready", function() {
     var stageH = frame.height;
 
  
+
+    //frame.loadAssets(["sound.mp3", "pic.jpg"], assets/); //load files from the assets folder
+    frame.on("complete", function(){
+        frame.asset("sound.mp3").play();
+        frame.asset("pic.jpg").addTo(stage);
+
+    });
+
+
     var blob = new Blob({ //this is object literal - that's why you use commas
         dblclick:true, 
         color: frame.blue
