@@ -50,7 +50,7 @@ frame.on("ready", function() {
         .center(stage) 
         .mov(0,50); //this is all one statement - that's why you don't need a semicolon
 
-       zim.outline(blob);
+       //zim.outline(blob);
 
        blob.animate({obj:{rotation:360, alpha:0, scale:0}, time:700, from:true});
 
@@ -115,12 +115,20 @@ frame.on("ready", function() {
    
 
    var shape = new Shape(200, 200)
-       .center(stage)
-       .mov(300, -100); //you won't see anything at this point, it's like a container
+       .addTo(stage);
+       //.mov(300, -100); //you won't see anything at this point, it's like a container
 
    shape.graphics
        .beginFill(frame.orange)
-       .drawRect(0,0,200,200);    
+       .beginStroke("black")
+       .setStrokeStyle(4)
+       //.drawRect(0,0,200,200);
+       .moveTo(140, 40)
+       //.drawRect(0,0,200,200)  
+       .lineTo(240, 40)
+       .lineTo(240, 100)
+       .lineTo(140, 40)
+       .closePath();  //to make all corners look the same
 
 
 
