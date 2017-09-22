@@ -78,15 +78,37 @@ frame.on("ready", function() {
     //     zog(i);
     // }
 
-    loop(20, function(i){
-        zog(i);
+    var rectangles = new Container()
+        .addTo(stage);
+
+    
+    var width = 100;
+    var height = 50;
+    var margin = 20;
+    var spacing = 10;
+    var num = 10;
+
+    loop(num, function(i){
+        var rect = new Rectangle (width, height, frame.pink, null, null, 10)
+        rect.addTo(rectangles)
+        .pos(margin, margin + i*(height + spacing))
+
+
+
+    //rect.pos(num, margin);    
+
+
+
+
+    
 
     });
 
+   
 
     stage.update(); // this is needed to show any changes
 
-
+    
 
 
 
