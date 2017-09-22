@@ -45,13 +45,17 @@ frame.on("ready", function() {
         dblclick:true, 
         color: frame.blue
     })
+
+
+
       
 
 
         .center(stage) 
         .mov(0,50); //this is all one statement - that's why you don't need a semicolon
 
-
+       zim.outline(blob);
+       blob.animate({obj:{alpha:0, scale:0}, time:700, from:true});
 
     function bigger(){
         blob.sca(blob.scaleX == 1 ? 3 : 1); // ternary operator
@@ -80,6 +84,7 @@ frame.on("ready", function() {
 
     var rectangles = new Container()
         .addTo(stage);
+
         //rectangles.drag();
 
     
