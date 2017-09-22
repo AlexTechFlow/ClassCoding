@@ -68,7 +68,25 @@ frame.on("ready", function() {
     blob.on("click", bigger);
 
 
+    //for (var i=0; i<10; i++) {
+    //   zog(i);
+    //}
+
+    // zim.loop(10, again); 
+
+    // function again(i) {
+    //     zog(i);
+    // }
+
+    loop(20, function(i){
+        zog(i);
+
+    });
+
+
     stage.update(); // this is needed to show any changes
+
+
 
 
 
