@@ -53,8 +53,22 @@ frame.on("ready", function() {
 		color:"#000", 
 		corner:50
 	});
-	
+
 	backing.center(stage);
+
+	var tabs = new zim.Tabs({
+		width:800, 
+		height:50, 
+		tabs:["CONTROLS", "ANIMATION", "SOUND", "PICTURE"],
+		corner:20,
+		spacing:4
+    });
+
+    tabs.center(stage, 0).mov(0, -(backing.height+tabs.height)/2);
+
+  
+
+
 
 
 
