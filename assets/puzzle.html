@@ -45,22 +45,30 @@ frame.on("ready", function() {
 
     flower.graphics.f(frame.green).p("AgEj+YAAAAhCAAh7ABYhfABiLACiyACYg0ABg6ABg/ABYgNAAgMAAgOABYgLAAgLAAgMABYgDAAgEAAgEAAYgDAAgDAAgCAAYgEABgCAAACAAIABABIADAAYADAAADAAADAAYAKABAJAAAKABYAaAAAZABAbABYALAAALAAALABYAKAAAGABAGAAYAKABALABAKAAYBVAHBjAIBqAIYAHAAAHABAHABYAIAAAIABAJAAYAQABARABARABYAiACAiACAjADIAXABIAKABIAJABYAMABANABAHABYARACAIADABACIAAAGYAAABAAAAAAABIgCACIgCADYgCABAAABgCABIgFADIgGADYgBABgEACgCABYgKAEgNAEgPADYgEABgEABgEABYgEABgDABgGABYgJACgKABgJACYgEABgFABgEAAYgEABgEABgGABYgKABgLACgJABYgFABgEAAgFABYgCAAgCABgCAAYgDAAgDAAgCABYgKABgJABgJABYgEAAgEABgDAAYgFABgEAAgEABYgIAAgGABgGAAYgLABgGABAAAAYAADMCmCmDMAAYDNAAClimAAjMYAAAAgFgBgLgBYgGAAgGgBgIAAYgEgBgEAAgFgBYgDAAgEgBgEAAYgJgBgJgBgKgBYgCgBgDAAgDAAYgCAAgCgBgCAAYgFgBgEAAgFgBYgJgBgLgCgKgBYgGgBgEgBgEgBYgEAAgFgBgEgBYgJgCgKgBgJgCYgGgBgDgBgEgBYgEgBgEgBgEgBYgPgDgNgEgKgEYgCgBgEgCgBgBIgGgDIgFgDYgCgBAAgBgCgBIgCgDIgCgCYAAgBAAAAAAgBIAAgGYABgCAIgDARgCYAHgBANgBAMgBIAJgBIAKgBIAXgBYAjgDAigCAigCYARgBARgBAQgBYAJAAAIgBAIAAYAHgBAHgBAHAAYBqgIBjgIBVgHYAKAAALgBAKgBYAGAAAGgBAKAAYALgBALAAALAAYAbgBAZgBAaAAYAKgBAJAAAKgBYADAAADAAADAAIADAAIABgBYACAAgCAAgEgBYgCAAgDAAgDAAYgEAAgEAAgDAAYgMgBgLAAgLAAYgOgBgMAAgNAAYg/gBg6gBg0gBYiygCiLgChfgBYh7gBhCAAAAAAYgCgBgFAAgCAB");
     
+
     flower.center(stage).outline();
 
 
     var tiles = new Container(stageW, stageH)
         .addTo(stage);
 
-        
 
-    var total = 10; // put variable on top for convenience
+
+    var total = 8; // put variable on top for convenience
+    var spacing = 20;
+    var size = 100;
+    var margin = 50;
 
     zim.loop(total, function(i) {
         zog(i);
-        var rect = new Resctangle()
+        var rect = new Rectangle(size,size,frame.yellow)
+            .addTo(tiles)
+            .pos(margin + (size + spacing)*i, margin);    
+        zog(rect.width);
     });   
-
     
+
+    tiles.on("click", select);
 
 
     stage.update(); // this is needed to show any changes
