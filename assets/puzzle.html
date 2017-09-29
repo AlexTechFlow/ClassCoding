@@ -46,7 +46,7 @@ frame.on("ready", function() {
     flower.graphics.f(frame.green).p("AgEj+YAAAAhCAAh7ABYhfABiLACiyACYg0ABg6ABg/ABYgNAAgMAAgOABYgLAAgLAAgMABYgDAAgEAAgEAAYgDAAgDAAgCAAYgEABgCAAACAAIABABIADAAYADAAADAAADAAYAKABAJAAAKABYAaAAAZABAbABYALAAALAAALABYAKAAAGABAGAAYAKABALABAKAAYBVAHBjAIBqAIYAHAAAHABAHABYAIAAAIABAJAAYAQABARABARABYAiACAiACAjADIAXABIAKABIAJABYAMABANABAHABYARACAIADABACIAAAGYAAABAAAAAAABIgCACIgCADYgCABAAABgCABIgFADIgGADYgBABgEACgCABYgKAEgNAEgPADYgEABgEABgEABYgEABgDABgGABYgJACgKABgJACYgEABgFABgEAAYgEABgEABgGABYgKABgLACgJABYgFABgEAAgFABYgCAAgCABgCAAYgDAAgDAAgCABYgKABgJABgJABYgEAAgEABgDAAYgFABgEAAgEABYgIAAgGABgGAAYgLABgGABAAAAYAADMCmCmDMAAYDNAAClimAAjMYAAAAgFgBgLgBYgGAAgGgBgIAAYgEgBgEAAgFgBYgDAAgEgBgEAAYgJgBgJgBgKgBYgCgBgDAAgDAAYgCAAgCgBgCAAYgFgBgEAAgFgBYgJgBgLgCgKgBYgGgBgEgBgEgBYgEAAgFgBgEgBYgJgCgKgBgJgCYgGgBgDgBgEgBYgEgBgEgBgEgBYgPgDgNgEgKgEYgCgBgEgCgBgBIgGgDIgFgDYgCgBAAgBgCgBIgCgDIgCgCYAAgBAAAAAAgBIAAgGYABgCAIgDARgCYAHgBANgBAMgBIAJgBIAKgBIAXgBYAjgDAigCAigCYARgBARgBAQgBYAJAAAIgBAIAAYAHgBAHgBAHAAYBqgIBjgIBVgHYAKAAALgBAKgBYAGAAAGgBAKAAYALgBALAAALAAYAbgBAZgBAaAAYAKgBAJAAAKgBYADAAADAAADAAIADAAIABgBYACAAgCAAgEgBYgCAAgDAAgDAAYgEAAgEAAgDAAYgMgBgLAAgLAAYgOgBgMAAgNAAYg/gBg6gBg0gBYiygCiLgChfgBYh7gBhCAAAAAAYgCgBgFAAgCAB");
     
 
-    flower.center(stage).outline();
+    // flower.center(stage).outline();
 
 
     var tiles = new Container(stageW, stageH)
@@ -66,9 +66,27 @@ frame.on("ready", function() {
             .pos(margin + (size + spacing)*i, margin);    
         zog(rect.width);
     });   
-    
 
-    tiles.on("click", select);
+    
+    tiles.cursor = "pointer"; // cursor property, matches the CSS property
+
+    tiles.on("click", function(e){
+        zog("clicking");
+        e.target.removeFrom(tiles);
+        stage.update();
+    });
+
+
+
+
+    // defining a function as compared to an anonymous function literal 
+    //function select() {
+    //    zog("selecting");
+        //return "hello";
+
+    //}
+
+    //zog ( select() );
 
 
     stage.update(); // this is needed to show any changes
