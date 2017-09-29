@@ -52,7 +52,10 @@ frame.on("ready", function() {
         .addTo(stage);
 
     var total = 10; // put variable on top for convenience
-    zim.loop(total);   
+
+    zim.loop(total, function() {
+        zog(i)
+    });   
 
     
 
