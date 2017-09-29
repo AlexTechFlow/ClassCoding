@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Using Adobe Animate Shapes</title>
+
+<!-- Welcome to ZIM at http://zimjs.com - Code Interactive Media Pizzazz! 	        -->
+<!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS http://createjs.com -->
+<!-- Founded by Inventor Dan Zen - http://danzen.com - Canadian New Media Award Winner 	-->
+<!-- ZIM is free to use. You can donate to help improve ZIM at http://zimjs.com/donate 	-->
+
+<script src="https://d309knd7es5f10.cloudfront.net/createjs.min.js"></script>
+<script>
+	var zon = true; // set to false to turn off console messages from zim
+	var zns = false; // set to true to require zim namespace - eg. new zim.Frame()
+</script>
+<script src="https://d309knd7es5f10.cloudfront.net/zim_6.2.2.js"></script>
+<script src="Shape-1.js"></script>
+<script src="shape2.js"></script>
+<!-- use zimjs.com/code/distill for minified individual functions! -->
+
+<style>
+	body {background-color:#ccc;}
+</style>
+<script>
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+var color = "#444";
+
+// as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
+var frame = new Frame(scaling, width, height, color);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+
+
+    var flower = new Shape(174.4,115);
+    //flower.graphics.beginFill("violet")
+   
+ 
+
+    flower.graphics.f(frame.green).p("AgEj+YAAAAhCAAh7ABYhfABiLACiyACYg0ABg6ABg/ABYgNAAgMAAgOABYgLAAgLAAgMABYgDAAgEAAgEAAYgDAAgDAAgCAAYgEABgCAAACAAIABABIADAAYADAAADAAADAAYAKABAJAAAKABYAaAAAZABAbABYALAAALAAALABYAKAAAGABAGAAYAKABALABAKAAYBVAHBjAIBqAIYAHAAAHABAHABYAIAAAIABAJAAYAQABARABARABYAiACAiACAjADIAXABIAKABIAJABYAMABANABAHABYARACAIADABACIAAAGYAAABAAAAAAABIgCACIgCADYgCABAAABgCABIgFADIgGADYgBABgEACgCABYgKAEgNAEgPADYgEABgEABgEABYgEABgDABgGABYgJACgKABgJACYgEABgFABgEAAYgEABgEABgGABYgKABgLACgJABYgFABgEAAgFABYgCAAgCABgCAAYgDAAgDAAgCABYgKABgJABgJABYgEAAgEABgDAAYgFABgEAAgEABYgIAAgGABgGAAYgLABgGABAAAAYAADMCmCmDMAAYDNAAClimAAjMYAAAAgFgBgLgBYgGAAgGgBgIAAYgEgBgEAAgFgBYgDAAgEgBgEAAYgJgBgJgBgKgBYgCgBgDAAgDAAYgCAAgCgBgCAAYgFgBgEAAgFgBYgJgBgLgCgKgBYgGgBgEgBgEgBYgEAAgFgBgEgBYgJgCgKgBgJgCYgGgBgDgBgEgBYgEgBgEgBgEgBYgPgDgNgEgKgEYgCgBgEgCgBgBIgGgDIgFgDYgCgBAAgBgCgBIgCgDIgCgCYAAgBAAAAAAgBIAAgGYABgCAIgDARgCYAHgBANgBAMgBIAJgBIAKgBIAXgBYAjgDAigCAigCYARgBARgBAQgBYAJAAAIgBAIAAYAHgBAHgBAHAAYBqgIBjgIBVgHYAKAAALgBAKgBYAGAAAGgBAKAAYALgBALAAALAAYAbgBAZgBAaAAYAKgBAJAAAKgBYADAAADAAADAAIADAAIABgBYACAAgCAAgEgBYgCAAgDAAgDAAYgEAAgEAAgDAAYgMgBgLAAgLAAYgOgBgMAAgNAAYg/gBg6gBg0gBYiygCiLgChfgBYh7gBhCAAAAAAYgCgBgFAAgCAB");
+    
+    flower.center(stage).outline();
+
+
+    var tiles = new Container(stageW, stageH)
+        .addTo(stage);
+
+    var total = 10; // put variable on top for convenience
+    zim.loop(total);   
+
+    
+
+
+    stage.update(); // this is needed to show any changes
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>
