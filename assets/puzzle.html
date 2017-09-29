@@ -101,7 +101,7 @@ frame.on("ready", function() {
 
     flower
         //sca(2)
-        .addTo(stage)
+        .addTo(stage, 0) //index 0 is to add it BEHIND at index 0 // THE FLOWER APPAERS BEHIND A RANDOM SHAPE // CLICK SHAPES TO FIND THE FLOWER
         .scaleTo(winner, 90,90) //90 in percentage
         .pos(winner.x, winner.y);
 
