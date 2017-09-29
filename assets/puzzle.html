@@ -37,12 +37,10 @@ frame.on("ready", function() {
     var stageW = frame.width;
     var stageH = frame.height;
 
-
+    //ADDING AN ADOBE ANIMATE SHAPE HERE:
     //var flower = new Shape(174.4,115);
     //flower.graphics.beginFill("violet")
    
- 
-
     //flower.graphics.f(frame.green).p("AgEj+YAAAAhCAAh7ABYhfABiLACiyACYg0ABg6ABg/ABYgNAAgMAAgOABYgLAAgLAAgMABYgDAAgEAAgEAAYgDAAgDAAgCAAYgEABgCAAACAAIABABIADAAYADAAADAAADAAYAKABAJAAAKABYAaAAAZABAbABYALAAALAAALABYAKAAAGABAGAAYAKABALABAKAAYBVAHBjAIBqAIYAHAAAHABAHABYAIAAAIABAJAAYAQABARABARABYAiACAiACAjADIAXABIAKABIAJABYAMABANABAHABYARACAIADABACIAAAGYAAABAAAAAAABIgCACIgCADYgCABAAABgCABIgFADIgGADYgBABgEACgCABYgKAEgNAEgPADYgEABgEABgEABYgEABgDABgGABYgJACgKABgJACYgEABgFABgEAAYgEABgEABgGABYgKABgLACgJABYgFABgEAAgFABYgCAAgCABgCAAYgDAAgDAAgCABYgKABgJABgJABYgEAAgEABgDAAYgFABgEAAgEABYgIAAgGABgGAAYgLABgGABAAAAYAADMCmCmDMAAYDNAAClimAAjMYAAAAgFgBgLgBYgGAAgGgBgIAAYgEgBgEAAgFgBYgDAAgEgBgEAAYgJgBgJgBgKgBYgCgBgDAAgDAAYgCAAgCgBgCAAYgFgBgEAAgFgBYgJgBgLgCgKgBYgGgBgEgBgEgBYgEAAgFgBgEgBYgJgCgKgBgJgCYgGgBgDgBgEgBYgEgBgEgBgEgBYgPgDgNgEgKgEYgCgBgEgCgBgBIgGgDIgFgDYgCgBAAgBgCgBIgCgDIgCgCYAAgBAAAAAAgBIAAgGYABgCAIgDARgCYAHgBANgBAMgBIAJgBIAKgBIAXgBYAjgDAigCAigCYARgBARgBAQgBYAJAAAIgBAIAAYAHgBAHgBAHAAYBqgIBjgIBVgHYAKAAALgBAKgBYAGAAAGgBAKAAYALgBALAAALAAYAbgBAZgBAaAAYAKgBAJAAAKgBYADAAADAAADAAIADAAIABgBYACAAgCAAgEgBYgCAAgDAAgDAAYgEAAgEAAgDAAYgMgBgLAAgLAAYgOgBgMAAgNAAYg/gBg6gBg0gBYiygCiLgChfgBYh7gBhCAAAAAAYgCgBgFAAgCAB");
     
 
@@ -55,12 +53,13 @@ frame.on("ready", function() {
     var total = 8; // put variable on top for convenience
     var spacing = 20;
     var size = 100;
-    var margin = 50;
+    var margin = 100;
 
     zim.loop(total, function(i) {
         zog(i);
         var rect = new Rectangle(size,size,frame.yellow)
             .addTo(tiles)
+            .centerReg(tiles) //to have the flower shape placed innthe center of each tile rectagle
             .pos(margin + (size + spacing)*i, margin);    
         zog(rect.width);
     });   
@@ -89,7 +88,7 @@ frame.on("ready", function() {
     // var winner = tiles.getChildAt(2); //third rectangle
     var winner = tiles.getChildAt(rand(0,total-1));
     // Another way of doing it: var winner = tiles.getChildAt(rand(0,tiles.numChildren-1)); //numChildren is a CreateJS propery - asking the number of children in the container
-    winner.removeFrom(tiles);
+    //winner.removeFrom(tiles);
     
 
 
@@ -103,7 +102,8 @@ frame.on("ready", function() {
     flower
         //sca(2)
         .addTo(stage)
-        .pos(margin, margin);
+        .scaleTo(winner, 90,90) //90 in percentage
+        .pos(winner.x, winner.y);
 
     // flower.width = size;
 
