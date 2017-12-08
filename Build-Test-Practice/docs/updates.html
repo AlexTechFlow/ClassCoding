@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<meta charset="utf-8" />
+<link rel="shortcut icon" type="image/ico" href="favicon.ico" />
+
+<!-- for Google -->
+<meta name="description" content="ZIMjs - JavaScript Interactive Media Modules - ZIM" />
+<meta name="keywords" content="zimjs, createjs, danzen, javascript, code, free, interactive media, modules, library, html5" />
+<meta name="author" content="Dan Zen" />
+<meta name="copyright" content="Dan Zen" />
+
+<!-- for Facebook -->
+<meta property="og:title" content="ZIM Updates - JavaScript Canvas Framework" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="http://zimjs.com/code/vee/promo.jpg" />
+<meta property="og:url" content="http://zimjs.com/code/updates.html" />
+<meta property="og:description" content="ZIM - Welcome to the modern world of coding!  A great place to learn and make professional apps, games, puzzles and sites!" />
+
+<!-- for Twitter -->
+<meta name="twitter:card" content="summary" /> <!-- do not edit this line (must say "summary") -->
+<meta name="twitter:title" content="ZIMjs - JavaScript Interactive Media Modules" />
+<meta name="twitter:description" content="ZIMjs - free JavaScript library of interactive media modules." />
+<meta name="twitter:image" content="http://zimjs.com/code/images/logo.jpg" />
+
+<!-- for Apple -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="apple-touch-icon-precomposed" href="images/icon_57.png" />
+<script src="https://d309knd7es5f10.cloudfront.net/zim_3.1.4.js"></script>
+<link href="docs.css" rel="stylesheet" type="text/css" />
+	<title>ZIM Updates</title>
+	<style>
+		.version {
+			color:white;
+			position:relative;
+			top:-5px;
+		}
+		.updates {
+			background-color:#222;
+			padding:0px 22px 30px 22px;
+			-moz-border-radius: 10px;
+		    border-radius: 10px;
+		}
+		em {font-style: normal; color:#ebcb35;}
+		strong {font-weight: normal; color:#acd241;}
+	</style>
+</head>
+
+<body>
+
+<a href="index.html" class="plain"><img id="logo" src="vee/logo_dark.png" border="0" width=100 /></a>
+
+<pre>
+&nbsp;ZIM DOCS - UPDATES                                                                    <a href="docs.html" class="plain">DOCS</a>
+
+This document lists the changes to ZIM from version to version.
+The code that matches these changes can be found on <a href="https://github.com/danzen/zimjs" target="gh" class="plain">GIT HUB</a>.
+<em>BREAKS</em> are highlighted below if you will need to change an app when updating it to the new ZIM.
+This happens if a parameter position is changed (new parameters might be placed next to related parameters)
+or if a method is removed and a replacement property added, etc.
+Breaks are kept to a minimum but in "later" parameter cases, ZIM DUO is often used so order is less important
+Shifts in names and functionality are also more common in recently added features.
+
+RECOMMENDATION: just leave any finished apps with the version of ZIM that was used at the time
+unless you see an <strong>IMPROVEMENT</strong> that will help your app - then make sure you test after upgrading!
+
+
+<div class="updates">
+<span class="version">ZIM 6.7.1</span>
+Added chainable cache() method to Containers and Sprites - this overrides CreateJS cache to operate on bounds by default and return the object for chaining
+so all Display Objects that extend a Container such as Circle, Rectangle, Triangle, Blob, Squiggle, Label, etc. all get the new cache()
+eg. var circle = new Circle(100, frame.red, frame.dark, 5).cache().drag();
+cache() will automatically cache the dimensions of the Circle, Rectangle, etc. and add the half borderWidth as well - NOTE that cache is chainable now!
+You can still pass in dimensions and if you do, you can just pass the first two parameters as width and height to start x and y at 0.
+Or you can pass all four parameters like CreateJS cache() - note, the fifth parameter is scale which can cache at a higher fidelity for later scaling
+This is a convenience function for circle.cache(-circle.radius, -circle.radius, circle.radius*2, circle.radius*2);
+
+Added a cur() chainable method for applying a cursor to a CSS cursor string value
+eg. var circle = new Circle(100, frame.red, frame.dark, 5).cur("pointer");
+This is a convenience function for circle.cursor = "pointer"
+The function itself in ZIM is virtually nothing:
+zim.cur = function(type) {
+	obj.cursor = type;
+	return obj;
+}
+But it allows us to chain and potentially avoid variable names - for example:
+var circle = new Circle().center(stage);
+circle.cursor = "pointer";
+circle.on("click", function(){zgo("http://zimjs.com");});
+// becomes 70% the code with:
+new Circle().center(stage).cur("pointer").on("click", function(){zgo("http://zimjs.com");});
+// remember that on() does not return the object for normal chaining but that is okay if no further reference to the object is needed
+// albeit, risky if you change your mind...
+
+Added a sha() chainable method for applying a createjs Shadow() that has defaults or params for color, shiftX, shiftY, blur or a single CreateJS Shadow
+eg. var circle = new Circle(100, frame.red, frame.dark, 5).sha().drag();
+This is a convenience function for : circle.shadow = new createjs.Shadow("rgba(0,0,0,.3)", 5, 5, 10); // etc.
+
+Updated gesture() and transform() to work properly with masking as well as converted drag(), animate() and Blob() into new mask management
+Added a dynamic parameter (default false) to setMask() that runs a Ticker to track and update mask movement.
+The Blob and any ZIM Shape that has drag, animate, transform or gesture will set the dynamic property to true (unless it was explicitly set to false)
+A Shape() that is used for a mask does not have to be dynamic as it is directly applied as the mask
+If you are going to mask with a ZIM shape (Rectangle, Circle, Triangle) and then manually transform the mask for instance, mask.sca(2);
+then either setMask with dynamic of true or setMask after the transformation
+<em>BREAK</em> - <strong>IMPROVEMENT</strong> - made setMask() return object for chaining - now that dynamic is set no need really to return mask object instead use mask.zimMask
+<em>BREAK</em> - Added count (total tiles) parameter to after cols and rows for ZIM Tile - in case you do not want all columns filled on last row.
+Added factor parameter to Swiper (default 1) is going the same direction and -1 is going in opposite direction
+Updated Swiper to recognize damp parameter
+Added swipestop event to Swiper for when motion stops after swipeup
+Adjusted added() method to clear longer interval if shorter interval detects stage
+Adjusted Blob and Squiggle to not check for stage updates when not on stage due to removeFrom stage - was working fine for toggle but not if manually removed
+Added slidestop event to drag() docs
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.7.0</span>
+Added devicemotion event to Frame - eg. frame.on("devicemotion", function(e) {zog(e.acceleration.x, e.acceleration.y, e.acceleration.z)});
+Added Portal(obj, lands) to controls module.
+Portal lets you travel between lands (screens, etc.) by rolling over an object - the portal.
+It handles masking the land through the portal and the land management - dispatches enter and exit events
+Here is an example http://zimjs.com/code/portal
+<em>BREAK</em> - changed "relative" parameters and properties in Dial to "continuous" for better clarity - and continuousMin and continuousMax
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.6.4</span>
+<strong>IMPROVEMENT</strong> Adjusted Dial and Slider keypress to be independent of other keydown commands (like MotionController)
+Added keyArrowsH and keyArrowsV to Dial and Slider that default to true - can now turn off left/right or up/down control
+Fixed arrow control on limit=false to allow multiple revolutions
+Fixed arrows on relative setting of Dial
+Fixed ticks for slider with max that is smaller than min
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.6.3</span>
+Adjusted docs to say Dial has default step of 1 (not 0 as docs had said).
+Added multitouch to Dial - Slider and drag() already have multitouch.
+Added relative, relativeMin and relativeMax parameters to Dial
+Added relativeMin, relativeMax get set properties to Dial and made min and max writeable for when relative is true
+This uses max-min as amount per revolution and continues to add or subtract accordingly
+http://zimjs.com/code/etch/ for Etch A Sketch example
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.6.2</span>
+<strong>IMPROVEMENT</strong> Added raw() method to zim.Ticker() that directly adds a function to a requestAnimationFrame
+Also added a removeRaw() method to remove a raw function with an id made by var id = Ticker.raw(function)
+This gives ultimate speed without calling the library system of Ticker.add()
+Ticker.add() should still be used in general for multiple ticker calls or calls along with zim animate, etc.
+But use raw() for dynamic art for instance where you have one butter smooth ticker.
+You need to call stage.update() in the raw() function
+We could have called stage.update() but it would run the risk of duplicating the update if the coder also put it in
+Updated Scroller to add second object to the same layer as the original object
+so no need to add Scroller objects to containers <strong>IMPROVEMENT</strong>
+Added flip and flipVertical parameters to Dynamo to flip the Sprite if speed is negative and reversible is false.
+This was done by the coder previously - so it might BREAK a project where it was already done... <em>BREAK</em>
+Also changed reversable parameter to reversible for proper spelling ;-)  <em>BREAK</em>
+Added convertColor() to DISTILL
+Adjusted DISTILL to properly access ZIM namespace without ZNS set to true
+Adjusted Frame to create a random canvasID if the frame is not the default frame and no canvasID is provided
+Added canvasID property to Frame to provide String of the canvasID - could also use frame.canvas.id
+Fixed glitch in makeID() so default is indeed mixed
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.6.1</span>
+Added isJSON function to test for JSON string.
+<strong>IMPROVEMENT</strong> Adjusted ZIM gesture to rotate and scale around pinch point.
+Added regControl parameter (default false) to gesture go back to rotating and scaling around registration point.
+Fixed chaining of stopAnimate and pauseAnimate.
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.6.0</span>
+DOCS:
+Removed namespace from documentation titles and doc examples
+Remember that the namespace can still be used. It can also be required by setting zns=true before importing ZIM
+Tidied up the function listings to not include title = function(parameters) but rather title(parameters)
+Added a text version of the docs for easy import into other viewing systems like PDF (thanks Vishwas Gagrani)
+
+SQUIGGLE:
+Added ZIM Squiggle - like a blob but only a line
+Squiggle has pretty well all the blob features including TransformManager support
+Squiggle does not have borderColor, borderWidth nor radius but rather has color, thickness and length
+It also defaults to "mirror" as the type of control rather than "straight" which the Blob defaults to
+
+BUTTON:
+<strong>IMPROVEMENT</strong> - added wait, waitTime, waitColor, rollWaitColor, waitTextColor, rollWaitTextColor, waitModal, waitEnabled parameters to the end of the Button parameters.
+Added clearWait() and removeWait() methods, a waiting property and a waited event which is dispatched if the waitTime is reached.
+For wait backings and icons use the setBackings() and setIcons() methods along with the waited event to handle changes.
+<em>BREAK</em> - inserted a borderRollColor parameter before borderWidth which is before corner.
+Any existing buttons with traditional parameters up to corner will broken - an extra null will have to be inserted before borderWidth.
+Also added a borderRollColor property to the zim Button.
+Since the parameter order has changed, moved dashed to after flatBottom parameter - to match Rectangle.
+Added wait parameters to Tabs and Pad as well and added gradient and gloss to Pad
+
+PANE:
+Added the following parameters to ZIM Pane()
+bar - (default null - no bar) a String or ZIM Label title for the pane that will be presented on a bar across the top
+barColor - (default "rgba(0,0,0,.2)") the background color of the bar if a bar is requested
+barHeight - (default fit label) the height of the bar if a bar is requested
+close - (default false) - a close X for the top right corner that closes the pane when pressed
+closeColor - (default #555) - the color of the close X if close is requested
+Also added bar, barColor, barBacking, and close properties to access these objects
+Fixed TextArea and Loader inside Pane add/removal problem - was using Dictionary objects list rather than values list
+Also for multiple TextAreas was not looping through container backwards when removing so was missing an item
+<em>BREAK</em> changed the backingAlpha to backdropColor to offer more flexibility for the backdrop
+use "rgba(0,0,0,.5)" etc. for dark and "rgba(256,256,256,.5)" for light - and of course colors as well.
+You can use a solid color and then drop the alpha with pane.backdrop.alpha = .2 - not alp() as backing is CreateJS shape.
+
+HITTESTCIRCLES:
+<strong>IMPROVEMENT</strong> - added ZIM hitTestCircles() method to all display objects.
+This tests if two circle shapes are hitting using an equation based on cirles made from bounds
+If the bounds are not square, the circles are averaged - the radius is half the average of the lengths of its sides
+(This is different than hitTestCircle() where the points around the "circle" actually stretch to an oval with the bounds)
+obj.hitTestCircles(obj2) is a calculation based on intersecting circles so is faster than shape hitTests
+It will be as fast as hitTestBounds and hitTestGrid.
+hitTestCircles second parameter is a margin number value which can be positive or negative to tweak the hitTest
+A margin parameter has been added to hitTestBounds as well before the boundsShape
+
+OTHER:
+<strong>IMPROVEMENT</strong> - added zim.previewAudioSprite() to the META module to create tabs with each sound in an AudioSprite for easy preview
+Adjusted parseAudioSprite() to clarify that it returns a CreateJS AudioSprite object
+<em>BREAK</em> - adjusted Blob to have a setData() method rather than a set() method so the general set() method is not obscured
+<em>BREAK</em> - adjusted transform() transformObject to have a setData() method rather than a set() method to be consistent with Blob and Squiggle
+NOTE: transform has a transformObject which is a custom object - not a Display object so set() is fine there but wanted to be consistent
+<em>BREAK</em> - adjusted Blob and the transformObject to have recordData() methods rather than record() methods
+These now match - recordData(), setData(), recordPoints(), setPoints() - sorry for the adjust but should be settled now.
+Also adjusted the Docs on Blobs to update the single click edit.
+Also adjusted the Docs on the Blob's points property to indicate a different format for setting and getting points.
+Adjusted TextArea and Loader to use zim.added() to test for the stage and then on("added") to test for re-adding after
+Fixed a glitch in Stepper so the downForward parameter works as expected
+Added read only num property to Blob (to match Squiggle's num property) for number of points
+Added error support for font loading so load completes if font is missing - takes the timeout though of 8 seconds
+which is not ideal but could not seem to capture immediate bad URL error with error or fileerror events
+Fixed Stepper to set correct selectedIndex when stepping through number list that does not start at 0 and make sure enabled has this number when set to true
+Gave Pane and Indicator enabled properties like most other components
+<strong>IMPROVEMENT</strong> - adjusted TextArea to have a background-color of rgba(0,0,0,.01) so cursor and selection highlight shows up (was at transparent - weird that would affect selection)
+<strong>IMPROVEMENT</strong> - adjusted zim.drag() so the last drag added is the only drag on the object
+<strong>IMPROVEMENT</strong> - added a dynamically created audio tag for the first audio loaded to jumpstart audio on some Apple devices
+Thanks Bart Libert for reporting and testing the issue.
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.5.0</span>
+AUDIOSPRITES:
+<strong>IMPROVEMENT</strong> Added support for AudioSprites with frame.loadAssets() and frame.asset()
+Added outputAudioSprite parameter to loadAssets() to show converted AudioSprite data when using ZIM AudioSprite format
+Added parseAudioSprite() function to META section for parsing AudioSprite data from https://github.com/tonistiigi/audiosprite
+
+TRANSFORM, BLOB and TRANSFORM MANAGER:
+Added a transformType property to the transformed event object for transform()
+This has values of "scale", "move", "rotate", "stretchX", "stretchY", "reg" "reset"
+Added objects and persistID to the start of ZIM TransformManager() parameters
+<em>BREAK</em> The unique parameter has been removed now that transform works with single click
+Added currentObject and persistData properties to TransformManager
+Added EVENTS to TransformManager:
+1. transformed event when pressup on any of the controls or on click
+transformed event object has transformObject and transformType properties
+the transformType property has values of:
+FOR TRANSFORM: "size", "move", "rotate", "stretch", "reg" "reset"
+FOR BLOB: "move", "bezierPoint", "bezierHandle", "bezierSwitch"
+2. transformshow and transformhide events for when click to hide or show controls
+these have a transformObject property to indicate what was shown or hidden
+Added a dispose(removePersist, removeControls) method to TransformManager
+Added a dispose() to the transformControls for any transformed object to remove transform controls and events
+Made Blob and transform / TransformManager only trigger change or transform events when a property value changes
+Previously, a change would happen on mousedown and pressup but now there has to be a different x or y
+Same with all handles, scaling, rotating, reg, etc.
+
+SHAPE BITMAP and GRADIENT FILLS:
+<strong>IMPROVEMENT</strong> - added colorCommand and borderColorCommand properties to ZIM shapes (Circle, Rectangle, Triangle, Blob)
+These allow you to set Bitmap, linearGradient and radialGradient fills on the shapes (through CreateJS Graphic objects)
+Thanks Samual Jacquinet for the prompting!
+
+OTHER UPDATES:
+Fixed Waiter.dispose() method when short wait times - thanks Ami Hanya
+zim.hitTestPoint, hitTestReg, hitTestRect, hitTestCircle got a new last parameter - boundsCheck (default true)
+Set this to false to not do a bound intersection check first
+This would be slower but if the bounds are wrong (such as with blobs) the parameter should be set to true
+to make sure that only the shape is used and not filtered by the faster bounds test.
+Adjusted ZIM Blob to fix bounds issue due to above.
+<em>BREAK</em> - no longer clone the cursor property when cloning an object - that can lead to unexpected results - but let us know if you disagree
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.4.1</span>
+<strong>IMPROVEMENT</strong> fixed memory leak in transform() that was leaving mousemove events due to using wrong variable name
+<strong>IMPROVEMENT</strong> <em>BREAK</em> removed dblclick parameter and replaced with toggle parameter for single click editing
+This is much more intuitive and has been set to a default of true.
+So click on shows controls and click off hides controls.
+<strong>IMPROVEMENT</strong> <em>BREAK</em> changed dblclick parameter for zim.Blob() to toggle to match transform()
+Also changed Blob to single click to show and hide controls.
+<strong>IMPROVEMENT</strong> <em>BREAK</em> made blobs drag when controls are active to match transform() and most editing tools
+and changed dblclickDrag parameter to move to match transform() and default move to true (set to false to turn off dragging)
+<strong>IMPROVEMENT</strong> <em>BREAK</em> added a handleSize parameter to Blob just before the toggle parameter that sets the handle size like with transform
+This defaults to 20 on mobile and 10 on not mobile ;-)
+<em>BREAK</em> changed the record() method of Blob to recordPoints() which matches format when creating a Blob
+<strong>IMPROVEMENT</strong> and then added new record() and set() methods that work together for updating already created Blobs
+This was so that Blob objects can be added to the zim.TransformManager just objects with transforms
+You will need to make a basic Blob with the correct number of points.
+Also added a setPoints() method that sets the points of an existing Blob that match the recordPoints
+Strategy - if you want to create Blobs from data use the recordPoints and pass that data into the points parameter.
+If you want to adjust an existing Blob then use the setPoints() method
+If you want to record more than just the point data - for instance, x, y, color, etc. then use record() and set()
+Or let the TransformManager handle it - it uses the new record() and set() similar to the transformControls record() and set() methods.
+Also adjusted zim.setMask() to help handle dragging of a Blob object as a mask and added an example to the setMask docs
+as well as an update to the snake at http://zimjs.com/code/zoo.html
+Updated the other animals too including adding clone() to lion assets for multiple lions, putting snake into a function for multiple snakes
+<strong>IMPROVEMENT</strong> - made zim.TransformManager also handle Blob objects as mentioned above - including the saving of, resizing and handling show and hide
+Added getQueryString() method to return the HTML query string ?var=val&var2=val2 as an object with matching properties
+Thanks Ami Hanya for the suggestion.
+<strong>IMPROVEMENT</strong> - added loadTimeout parameter to frame.loadAssets() with a default of 8000ms - this is how long to wait for assets
+Thanks Jonghyun Kim for suggestion and to CreateJS for already having that in the LoadQueue
+<strong>IMPROVEMENT</strong> - adjusted frame.asset() to have a default "Broken Image" object (ZIM Circles) when asset is not available.
+This can be adjusted with the new loadFailObj parameter for zim.Frame() - the object will have a type property of "EmptyAsset"
+Also made loadAssets() accept a ZIM DUO configuration object.
+Made loadAssets() work with files without extensions.
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.4.0</span>
+<strong>IMPROVEMENT</strong> Added font support to zim.loadAssets() - for urls to fonts and also Google fonts
+Pass in font in format {font:name, src:url, type:string, weight:string, style:string}
+Any number of fonts can be passed in along with images, sound, etc. to loadAssets()
+The name is what you give it and you would use that name in a zim.Label({font:"name"})
+If you use http at the start of the font src it ignores the path parameter for that font
+This allows you to use your own fonts in a directory but also add google fonts in the same loadAssets.
+This piggy backs on CreateJS FontLoader() but consolidates the format and combines with other assets to load
+Added a backdropClose parameter to zim.Pane() - thanks Ami Hanya for the prompting
+<em>BREAK</em> moved the container parameter to the end of zim.Pane as most panes are added to the stage.
+In the past, ZIM did not know the stage but now it has a ZimDefaultFrame with its stage
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.3.3</span>
+UPDATED all ZIM Bits to version 6.3.3 using chaining, no namespace and loop throughout.
+Would recommend, this way of coding - see http://zimjs.com/code/tips.html
+Note: The ZIM Capture video series has not been updated and probably will not be.
+<em>BREAK</em> the scale() method has been depreciated and removed - use sca() which works the same way
+The new CreateJS has a scale property so ball.scale = 3; will set both scaleX and scaleY.
+It appears that scale will read the scaleX.  So, no more scale() method in ZIM.
+Instead you can use sca() for chaining and then scale, scaleX and scaleY for properties.
+<em>BREAK</em> - changed parameter order for TextArea and Loader - sorry - moved frame parameter to end
+We now have zimDefaultFrame which will do in most cases and if we are in a second frame then pass that in to the frame paremeter
+Added focus() property to TextArea  (thanks Armin for the prompting) before was textArea.tag.focus() piggy-backing on JS focus of HTML tag
+Adjusted OPTIMIZE, ANIMATE and DISTILL constants to work without the zim namespace with zns false - accidentally made them work when zns was true (so swapped)
+<strong>IMPROVEMENT</strong> Fixed a glitch in run() method of Sprite() to allow for replay of non-label Sprites
+since the change to normalized playback supporting non-sequential frames in SpriteSheets animations
+Adjusted zim.place() to return object for chaining
+<strong>IMPROVEMENT</strong> Adjusted zim.Rectangle to draw a normal rectangle if the corner is 0 was drawing a rounded rectangle with corner 0
+then realized the border was not mitred as expected - it had little rounded corners instead of 90 degrees.
+Updated zim.Accessibility() to put a z-index back to -5 that was accidentally left at 5 for testing.  Thanks Frank for the find.
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.3.2</span>
+Added split property to Parallax object to center the input value (with mouseX this defaults to true - the others false)
+Thanks Raman for the prompting! <strong>IMPROVEMENT</strong>
+<em>BREAK</em> Adjusted Parallax parameter order to layers, damp, auto, stage and give the object the default frame's stage
+With the scrollX, scrollY chrome fix, this is a good time to adjust the stage parameter - it is the last of the ZIM classes left requiring a stage since the default frame addition.
+This was primarily due to parallax being its own module without Frame - but now ZIM has Distill, so it is not that big a deal to loose parity with the old stand-alone parallax module.
+Fixed mouseY to use stageH as default inMax rather than stageW (bug)
+Adjusted scrollX and scrollY to test for document.documentElement && document.documentElement["scroll"+side]) || document.body["scroll"+side]
+Before was assuming Safari only used documentElement and Chrome, Edge, Firefox worked fine - then Chrome seems to have changed its mind...
+The Chrome change will <em>BREAK</em> any previous Parallax scrolls with scrollbar (not mouse) so if you made one, upgrade to this ZIM and it will not be broken.
+<strong>IMPROVEMENT</strong> And newer ZIM has a Frame parameter called allowDefault - set that to true to let mobile scroll on canvas.
+Any old Sprite work with Parallax, will probably need to set {spriteSheet:spriteSheet} as that parameter position changed a while back.
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.3.1</span>
+Added cache parameter to transform() and automatically cache the handles and cursors unless set to false
+Added a outerColor property to ZIM Frame() to set the color of the HTML body (background-color style)
+Added outerColor parameter to the end of the ZIM Frame() class
+Adjusted tweek in Sprite.run() to handle non-label input - that got lost with a previous change.  <strong>IMPROVEMENT</strong>
+Added startType parameter to wiggle() defaults to both but can set to positive to start positive or negative to start negative
+Added onTop parameter to Blob so dragging it when controls gone defaults to brining the shape on top but can set to false to avoid this
+Added snapToPixel parameter to Tile that defaults to true - this helps moved Tiles not have tiny gap
+And added Tile parameters to documentation ;-)
+Fixed Blob() and transform() to work with dblclick on mobile to toggle edit mode. <strong>IMPROVEMENT</strong>
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.3.0</span>
+Created a transform() method for display objects that makes resize and rotate with little square handles, etc.
+Added a TransformManager() class to handle multiple transforms and save / load data.
+This is quite spectacular and is heading towards visual editors - perhaps even for ZIM HEP (7).
+Thanks Ami Hanya for the idea and the prompting - hope this helps!
+Made centerReg and outline return obj even if bounds not set (logs a warning)
+Added stage.preventSelection = false; if frame's allowDefault parameter is true <strong>IMPROVEMENT</strong>
+This fully allows mobile swiping, etc. to scroll a page when on the canvas (thanks Jonghyun)
+The Manager lost its resizing when moved to support the new ResizeManager - that is back.
+Fixed remove for one object in Manager
+Switched zimify() to require third parameter true for adding scale - will be depreciating scale() due to conflict with new CreateJS 1.1
+Start using sca() instead.
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.2.2</span>
+Added frame.red to colors (thanks Alexa!)
+Fixed glitch in Sprite.run() with wait, waitedCall, waitedParams.
+These were just being passed through to zim.animate() but were left all as wait property names - oopsy.
+Added pauseAnimate() and stopAnimate() methods (and functions) to basically replace pauseZimAnimate and stopZimAnimate
+This depreciates the last two - which were titled that early on as dynamic methods before ZIM 4TH methods
+All dynamic methods and properties had ZIM in them to avoid conflict
+but now that methods are common, there is no need for ZIM in the method name ;-).
+Fixed scale() which was turned off for glitch with setMask
+Traced it to a possible conflict with canvas scale() method only with new CreateJS 1.0 and if other interactivity! - weird.
+So scale() is back - all is well.
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.2.1</span>
+Updated defaults for mic with SoundWave for baseline (0) and magnify (1).
+Also cut the value off at 0 as it was going negative due to changes in ZIM 6.1.1
+Glitch in zimify() when applying scale() - might be conflicting with CreateJS Shape and Canvas scale() method?
+So removed scale() from zimify() - use sca() instead.
+Adjusted ZIM Pages to set pages to original alpha rather than 1 after a transition.
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.2.0</span>
+Updated ZIM to work with createjs.min.js the new CreateJS 1.0.0. <strong>IMPROVEMENT</strong>
+There were a few minor depreciations to take care of:
+getStage() became stage, setPaused() became pause, getNumChildren() became numChildren
+These were like that to support versions older than 2015 but there is no real use in that now.
+Note the gpu parameter of Frame that defaults to false.
+Set this to true to use StageGL which is the major part of the release.
+See bubbling video when we were preparing for this: https://www.youtube.com/watch?v=fUjyUpYdsM8
+Added zim.Noise() class that makes OpenSimplex noise for art, terrains, etc.
+http://zimjs.com/code/noise/
+This is part of the Code module along with Damp and Proportion, etc.
+Added a zim.Tile() class to let you tile an object (or objects with a ZIM VEE value).
+You can choose set col and row parameters, add optional spacing and mirror as you tile.
+This extends a zim.Container() and is part of the Display module.
+Added a zim.smoothStep(min, max, input) function to the code module.
+This takes an input value and outputs a value between 0 and 1
+that represents a transition between the min and max with easing at both ends.
+If you want the easing to be more pronounced, then reduce difference between min and max.
+If the value falls outside the min or max it is set to the min or max.
+Remember the return value is between 0 and 1 so you can multiply by max-min and add it to min
+to get a value at the original scale.
+<strong>IMPROVEMENT</strong> added drawImageData() method and imageData property to zim.Bitmap().
+This allows you to draw pixel data into a Bitmap as you can with raw Canvas.
+There is also reference to the proxyCanvas and the proxyContext for the canvas the Bitmap uses as source.
+<em>BREAK</em> - there are new width and height parameters for Bitmap that come before the id parameter (breaks order).
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.1.1</span>
+<strong>IMPROVEMENT</strong> Made Sprite.run() work with non-sequential frames and nested labels and next calls
+(see CreateJS SpriteSheet docs for format of animation data - which can be specified in a JSON file).
+The Dynamo was already working with these and now the run() method does as well.
+Adjusted cloned sprites to have different default ids - as pauseRun() was pausing all cloned sprites ;-)
+Made pauseRun and stopRun chainable.
+Added a flowthrough override for zik() by passing value as {noZik:value}
+which allows arrays and functions to be passed through as a value rather than something for zik to process.
+Updated SoundWave with the following <strong>IMPROVEMENTS</strong> to the parameters:
+baseline - removes this amount of amplitude from each data point (after operation is applied)
+magnify - multiplies the data point by this much (after the baseline is removed)
+reduce - subtracts this amount from each data point (after magnified)
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6.1.0</span>
+<strong>IMPROVEMENT</strong> Made zim.Accessibility work on iOS and mostly on Android - Stepper, Slider, Dial and ColorPicker still need work
+<em>BREAK</em> - changed applicationName to appName, and highlight to alwaysHighlight and the parameters following are prefixed with AH
+This is a solid week of programming for iOS Voice Over - visit on Slack for learnings and advice
+Still untested on stand-alone screen readers but good on Windows Narrator, and the mobile readers.
+Added currentValueEvent properties to Slider, Dial to get or set value and dispatch event if set changes value
+normally, if we are setting a value with code, we can do whatever we would do in the event at that time
+but with accessibility, on mobile, the options are being set by HTML and we want to trigger the event
+Added a text property to the RadioButton button containers
+Added a zim.ResizeManager() that extends zim.Manager and handles resizing Accessibility, Layout, Pages, Grid, Guide, TextArea and Loader
+This is just a small class - a few lines of code.
+Note - the Accesibility resize() will call any loader or text areas inside it...
+<em>BREAK</em> Added decimals parameter to Accessibility before frame parameter
+<em>BREAK</em> for the following:
+	Adjusted Stepper type parameter to stepperType parameter to avoid conflict with new type property for all Display Objects
+	Adjusted CheckBox type parameter to indicatorType parameter to avoid conflict with new type property for all Display Objects
+	Adjusted Dial type parameter to indicatorType parameter to avoid conflict with new type property for all Display Objects
+	Adjusted Indicator type parameter to indicatorType parameter to avoid conflict with new type property for all Display Objects
+<em>BREAK</em> - changed buttons property of RadioButtons to an array rather than container - to match buttons array in Tabs and Pad
+Made points property of Blob read and write instead of just read
+Added functionality for selectedIndex and stepperArray of Stepper to work with "number" stepperType
+Changed currentIndex to selectedIndex for Stepper - BREAKS - matches property name with other components (sorry)
+Updated docs for TextArea to include size parameter which was there all along...
+Adjusted Dial docs to read default 1 for step.
+</div>
+
+<div class="updates">
+<span class="version">ZIM 6</span>
+Made ZIM Accessible - <strong>IMPROVEMENT</strong>
+Added zim.Accessibility() class to handle tabbing to any ZIM Display Object and send messages to Screen Readers
+http://zimjs.com/code/screenreader has a detailed example
+You basically pass zim.Accessibility() an array of objects (with optional titles)
+These will be tabbed to if they are on the stage and the title or a default title sent to the Screen Reader
+There is also a talk() method to be able to send a message to the Screen Reader at any time
+Gave all ZIM Display objects a type property that matches the class name as a String (case sensitive)
+<em>BREAK</em> - removed former (marked as temporary) work with tab order in Tabs, Stepper, and Frame - this is all replaced and updated in zim.Accessibility()
+<strong>IMPROVEMENT</strong> Adjusted Window to handle removing of Window while being rolled over (thanks Frank Los for the bug report)
+Added SLACK support discussions https://zimjs.slack.com
+Removed clone override from Swipe, Frame, and a few others that did not need it - just an oversight
+indicator.currentIndex is now constrained from -1 to num-1 where num is the number of lights
+Added readerDecimals parameter to Slider and Dial with default 2 decimal places the screen reader will read
+Added keyArrows parameter to Slider, Dial and ColorPicker for arrow key usage if in focus
+Added keyArrowsStep parameters to Slider, Dial so Screen Reader does not read all the decimals
+Adjusted bar of slider for positioning when pressed - was half a step off due to button registration change - <strong>IMPROVEMENT</strong>
+Also expanded hitArea on bar - <strong>IMPROVEMENT</strong>
+Added spellCheck parameter to TextArea - default true but can set to false
+Added an allowDefault parameter to zim.Frame that passes value through to CreateJS Touch.enable() method's third parameter
+Note: the third parameter does not seem to be working so an issue has been added to CreateJS GitHub - thanks Jonghyun Kim for working on this with us
+https://github.com/CreateJS/EaselJS/issues/898
+This will also prevent Frame from using zil to keep the canvas still
+You can set allowDefault to false and then manually remove the zil events for specific key or scrollwheel functionality
+Although the ZIM namespace was removed in 5.5.0, it will be handy to remember that from version 6 on, the ZIM namespace is not required
+</div>
+
+<div class="updates">
+<span class="version">ZIM 5.5.0</span>
+Added zimplify() global function. Note - this is different than zimify()
+zimplify() removes the requirement to use the zim namespace <strong>IMPROVEMENT</strong>
+Made full, fit and outside Frame template automatically call zimplify()
+You can control this with the new namespace parameter of zim.Frame()
+So for instance once you make a new zim.Frame() inside, you no longer need the zim namespace
+var circle = new Circle(rand(100,300), frame.green).center(stage); // will work
+Note: there is no zim namespace before Circle - used to be new zim.Circle()
+Note: do not call variables the same as zim functions:
+var rand = rand(100); // as rand() will no longer work after this!
+The zim namespace still works.
+zimplify(exclude) has an exclude parameter that lets you pass in a string command or an array of string commands
+and then these will require the zim namespace
+zim.wiggle() now supports ZIM DUO configuration object parameter (Thanks Frank Los for prompting)
+</div>
+
+<div class="updates">
+<span class="version">ZIM 5.4.0</span>
+Added zim.gesture() with pan, pinch and rotate multitouch gestures for position, scale and rotation
+zim.gesture() features a bounding rect, min and max scales, rotational snapping and pan sliding.
+<strong>IMPROVEMENT</strong> This is a new method under the Methods module for all ZIM Display objects
+Also added associated zim.noGesture() and zim.gestureRect() Methods
+for removing some or all of the gestures (and paradoxically, adding them back)
+and dynamically setting the bounding rectangle for the gestures.
+Works with the touch parameter set to true for zim.Frame() which is the default setting.
+</div>
+
+<div class="updates">
+<span class="version">ZIM 5.3.2</span>
+Adjusted zim.decimals() so that addZeros is the number of 0 spaces after the decimal
+addZeros is no longer a Boolean <em>BREAKS</em>
+and a new parameter, addZerosBefore, is the number of 0 spaces before the decimal
+Also added a time parameter that just turns the decimal dot into a colon to handle minutes and seconds
+Added a total property to the ZIM intervalObject for the zim.interval() that is -1 for infinite
+Added a "clear" transition type to Pages that fades out the old page then fades in the new page each at half the transition time
+Added transitioning property to pages so can test if pages are in transition (as they are cached)
+Adjusted docs - the radius of a zim.Circle is its real radius before scaling and setting the radius redraws the shape
+as opposed to width and height which are not necessarily the bounds but can be a scaled value
+Fixed multitouch with ZIM - was using: if (touch) createjs.Touch.enable(stage, true);
+And yet unfortunately, the second parameter is true for singleTouch! Ouch.
+<strong>IMPROVEMENT</strong> So now using: createjs.Touch.enable(stage);
+Adjusted zim.drag() so that drag Ticker is not removed if any touches are still active
+</div>
+
+<div class="updates">
+<span class="version">ZIM 5.3.1</span>
+Added simple array of pages to Pages class if you do not need swipe data for each page
+Also, now use the default stage as the default for the holder of Pages and moved the holder parameter to the end
+<em>BREAKS</em> - this breaks the parameter order of the Pages class
+Since introducing the default stage, there are a few of these breaks.
+Swapped zim.Ticker.has(function, stage) as stage will default to default stage <em>BREAKS</em> parameter order
+<em>BREAKS</em> - moved the index to the second parameter of center and centerReg and the add to the last parameter
+as more often than not, we are using centerReg and center to add the object to the stage and
+the second most popular parameter is the level (index).  Sorry, this breaks the parameter order for older apps
+Added an optional index value for Pages go() so can use page object or an index matching the pages array order
+<strong>ENHANCEMENT</strong> - added a check to zim.Ticker.add() so that it will not add the same function more than once
+added blendMode property to all zim Display objects that is the same as compositeOperation
+Fixed a glitch in Dial when min is greater than max - the ticks were not showing (used Math.abs() for tickNumber)
+Adjusted ColorPicker to default to drag of false if there is no buttonBar.
+<strong>ENHANCEMENT</strong> - fixed intermittent zim.interval() run-on after clear()
+<strong>ENHANCEMENT</strong> - zim.Emitter() had a faulty assignment to "this" in the added function affecting dispose() on multiple emitters
+Thanks Frank Los for reporting the bug
+</div>
+
+<div class="updates">
+<span class="version">ZIM 5.3.0</span>
+Added ZIM SoundWave() to get frequencies from sounds or mic
+Also adjusted the order of ZIM and the Documentation to the following:
+WRAP - CODE - DISPLAY - METHODS - CONTROLS - FRAME - META
+Display (formerly Build) has the basic display elements, shapes and components
+Methods (formerly Create) have the methods that all display objects have like drag(), center(), etc.
+Controls (formerly Pages) have objects for layout, swiping, pages, motion, parallax, etc.
+Removed zim.addDisplayMembers() and fully replaced it with zimify() <em>BREAK</em>
+</div>
+
+<div class="updates">
+<span class="version">ZIM 5.2.2</span>
+Adjusted interval doc description to include ZIM VEE and zik.
+Added color parameter to Pane in the docs.
+Adjusted glitch in Tabs when assigning widths to tabs without widths.
+Added ZIM VEE and zik to control length of Blob so random blobs can be made
+Added rotation, scaleX and scaleY read only properties to MotionController
+and adjusted so no object is needed - now we can use MotionController as pure data
+Adjusted zim.wiggle() to work on non display objects.
+Added time property in the Docs for the zim.interval obj return value
+</div>
+
+<div class="updates">
+<span class="version">ZIM 5.2.1</span>
+Adjusted zim.Emitter to properly set pool number when ZIM VEE values passed for num and interval
+Now uses min of interval and max of num options - would recommend not pooling if using function values for either of these
+Also fixed removing of particles if pooling is turned off
+Adjusted the pause method of the zim.timeout return object - so unpausing plays the remaining time properly
+Made zim.animate and zim.move apply zik before splitting scale into scaleX and scaleY so aspect ratio is kept
+</div>
+
+<div class="updates">
+<span class="version">ZIM 5.2.0</span>
+<strong>IMPROVEMENT</strong> Added StageGL support to ZIM Frame - as a gpu parameter which defaults to false - so set to true for WebGL
+CreateJS provides an isWebGL property of the stage you can use to get whether WebGL is being used
+Added gpuObject parameter to specify extra stageGL parameters
+Added refresh to resize for StageGL
+<strong>IMPROVEMENT</strong> Added nextFrame parameter to frame to pass interaction to next stage (for regular Stage and StageGL)
+Added zim.convertColor() to convert from string to hex or hex to string (StageGL color accepts hex only)
+Added spriteSheet parameter to zim.Sprite to accept a CreateJS spriteSheet
+Prior to this the Sprite would make a SpriteSheet from JSON or image and parameters input
+This was added because of the cool CreateJS SpriteSheetBuilder to dynamically create SpriteSheets from Shapes, etc. at run time
+Fixed the clone property of Sprite
+Adjusted Grid and Guide to auto add to obj parameter or the default stage - and fixed interval bug since zim.added() was used (thanks malus on GitHub)
+Fixed bug in zim.Frame where two full mode canvases were turning off Ticker stage updates on the first canvas when resized
+Fixed bug in zim.Frame was referencing keyword frame in key events when it should have been a reference to the object (that)
+</div>
+
+<div class="updates">
+<span class="version">ZIM 5.1.0</span>
+Added a zim.Blob class to make editable blobs - with bezier curves
+This is added after zim.Triangle and is very similar to the other zim shapes but a blob ;-)
+Blob has a number of types of bezier curves that can be accessed by double clicking the points
+Edits to the Blob can be recorded with the record() method and then recreated by passing the recording into points parameter
+Created a global variable zimDefaultFrame for the first frame made
+zim.Ticker.add(function, stage) and other Ticker functions no longer require stage
+The zimDefaultFrame's stage will be used if left out of add()
+This is fine for the majority of times when there is only one stage
+BUT - if more frames are used then the associated stage needs to be passed to update that stage
+<strong>IMPROVEMENT</strong> Added a failed event to frame for when canvas is not supported (thanks Frank Los for the prompting)
+Added a type parameter to wiggle() so it can wiggle negative, positive or both (default)
+Adjusted zim.interval to unpause immediately as an option
+Made outline() mouseEnabled = false;
+Made ticks a zim.Shape rather than a createJS.shape so it has ZIM 4TH methods
+<strong>IMPROVEMENT</strong> Adjusted zim Emitter pause for the freeze - for some reason not reading stored that.zimEmitter... used local variable instead
+Added frame.altKey, frame.ctrlKey, frame.metaKey, frame.shiftKey properties to specify key states
+<strong>IMPROVEMENT</strong> Made Pane close and drag automatically resize TextArea and Loader objects (due to HTML overlay)
+<strong>IMPROVEMENT</strong> Adjusted Loader to save as png by default or can specify type parameter of "jpeg" for jpeg (png more widely accepted)
+</div>
+
+<div class="updates">
+<span class="version">ZIM 5</span>
+ZIM VEE AND ZIK
+Introduced ZIM VEE (Roman Numeral 5) values that let you submit options for parameters to be chosen later (uses the new zik() function)
+Added zik() global function to pick randomly from an Array or a function result or a random number based on
+an object with min, max, integer, negative properties like the params for zim.rand()
+ZIM EMITTER AND WIGGLE
+Added zim.Emitter() to emit particles for fireworks, smoke, flames, falling objects, hair, grass, etc.
+This is a large class with 30 parameters some of which accept ZIM VEE values
+Examples can be found here: http://zimjs.com/code/particles
+Added zim.wiggle() to randomly go back and forth between the value passed to it - uses zik() and animate()
+ZIM ANIMATE AND MOVE
+Adjusted zim.move and zim.animate to accept ZIM VEE values for many of the parameters
+Including obj, set and props properties and overall parameters except for params, loopParams, waitParams, sequenceParams
+These will then be filtered through zik() to pick a random values
+This allows for a delay before a random value is picked - handy for passing info as a parameter
+Used by zim.Emitter() for instance to pass random properties and animate settings
+Added feature to zim.animate and zim.move to animate relative to current property value
+To do this the parameter value in the animation object is put in a string - can include negative sign
+Also works with the set parameter to set relative starting values
+Fixed rewind with set parameter active - hopefully that works - gets complicated
+zim.move() and zim.animate() - added waitedCall, loopWaitCall and rewindWaitCall to call functions after waiting and before loopWait and rewindWait
+zim.move() and zim.animate() - added waitedParams, loopWaitParams and rewindWaitParams to pass params to above (or callbacks receive the target)
+This <em>BREAK</em> parameter order - sorry!  Hopefully by this time you are using ZIM DUO configuration object technique
+Adjusted rewindCall and loopCall to happen after rewindWait and loopWait - so this may <em>BREAK</em> as it was before the waits!
+Fixed a glitch in stopZimAnimate(ids) when removing animation with ids with single animations across multiple targets - now works
+GENERAL ADJUSTMENTS
+Fixed zim.Label used Number.isNaN which is not supported on mobile so changed to older double test. <strong>IMPROVEMENT</strong>
+Fixed a bug in zim.copy - an undeclared var was flattening nested objects
+Adjusted zim.copy to ignore objects that are not an object literal - now will copy references to zim objects rather than breaking
+Adjusted zim.Triangle() adjust parameter to move shape rather than registration - could <em>BREAK</em> location of triangles
+as usually you are adjusting the centerReg and that just was negating the adjustment
+Added rotation to cloning of props - this was an oversight <em>BREAK</em> - but in a good way
+adjusted clone for shapes to clone latest color and border properties
+(and width and height for Rectangle and radius for Circle) possible <em>BREAK</em>
+Added read only framerate property to docs for zim.Ticker - use setFPS() to set framerate
+Added a has(stage, function) static method to zim.Ticker to check if the Ticker has that function for that stage
+Fixed a glitch in zim.interval where it was occasionally not pausing due to race condition
+Adjusted obj.clear to before the next() function in zim.timeout to prevent errors on occasion
+Added an zim.added() function and ZIM 4TH method to check if object has been added to the stage
+CreateJS has an "added" event that triggers when an object is added to another container
+but this container may not be on the stage.
+added polls with a setInterval every 100ms to see if the object has a stage property
+Once it does then it calls the callback and removes the interval
+Adjust scaleTo to take into account current scale - this could <em>BREAK</em> code if you had accommodated this already
+Adjusted zim.rand() with respect to a=0, b=0 explicit parameters
+was returning Math.random() now returns 0.  Only no parameters return Math.random() - might <em>BREAK</em>
+</div>
+
+<div class="updates">
+<span class="version">ZIM 4.9.2</span>
+Added zim.angle(x1, y1, x2, y2) function to find angle between two points relative to positive x axis
+part of the code module after the zim.dist() function - these are functions not methods.
+Added zim.placeReg(obj, id) function and zim 4th method to place locate a registration point relative to the obj
+this then gives an output in the console as you drag and drop a little cross indicator (like place())
+Adjusted zim.place() to output x and y and pos() data
+<strong>IMPROVEMENT</strong> Adjusted the zim.Label to be up one pixel in the y on a button
+<strong>IMPROVEMENT</strong> Fixed a bug in the Window where multiple windows would scroll together - missed a var declaration - oops (thanks Frank Los)
+<strong>IMPROVEMENT</strong> Adjusted zim.Pages to remove its children at the start - except for the currentPage (thanks Laura Warr)
+<strong>IMPROVEMENT</strong> Adjusted zim.Pages to not accept swipes or button clicks to go() until transition is finished (thanks Meagan Peat)
+The ZIM Pages example http://zimjs.com/code/pages has been updated to modern zim code showing Pages, Layouts, Grids, Guides, and MVC
+Fixed bug in frame.makeCircles - we had removed the frame module colors in favor of frame.blue, etc. and not adjusted makeCircles
+</div>
+
+<div class="updates">
+<span class="version">ZIM 4.9.1</span>
+Added a resize() method to the Window to resize the dimensions without scaling the content
+This allows independent scaling of the content to fit the width for instance in a long vertical scroll
+Added a minSize property to the indicator property of the Window - already had the size property
+For example:
+indicator.size = 6; // the width if vertical or the height if horizontal
+indicator.minSize = 12; // for the height if vertical or the width if horizontal
+Added scrollwheel support to Window
+Firefox has a canvas redraw glitch where it flashes unscaled/unpositioned content on full template resize
+Implemented a fix where over 40ms the ticker.update is set to false and at 20ms the resize happens
+It seems the requestAnimationFrame is catching the stage in a null dimension state or something...
+Anyway - only on Firefox with full mode and a Ticker running - and fixed now. <strong>IMPROVEMENT</strong>
+Adjusted Pad to default to an array of keys that match the rows and cols (of course!)
+Adjusted Label to properly valign bottom and center when text is more than one line <em>CHANGE</em>
+Also adjusted Label so bounds change when the text changes
+</div>
+
+<div class="updates">
+<span class="version">ZIM 4.9.0</span>
+Added Loader class to upload files from desktop to canvas zim.Bitmap object and also save to new window
+Added TextArea class to create an editable text box - it uses the HTML textarea tag and CreateJS DOMElement
+Added outlineColor and outlineWidth to Label <strong>IMPROVEMENT</strong>
+Added selectedIndex to ColorPicker docs
+Adjusted a few bugs with arrows in vertical steppers - hopeful that is all fixed - quite complex
+Made alpha change dispatch change event as well from ColorPicker <strong>IMPROVEMENT</strong>
+Added return object of the animation target for a series
+Fixed doubleclick glitch in zim animate created when a delay in protect was placed for animation series <strong>IMPROVEMENT</strong>
+Added dashed parameter to Rectangle, Circle, Triangle, and Button
+and made either borderColor or borderWidth create a border and make the other parameter have a default
+and made shapes be transparent if no color is specified AND a border is specified <em>BREAK</em>
+otherwise passing null for the color will default to black (as it has all along)
+This was a pain when you wanted a border without a fill - you had to set the fill to "rgba(0,0,0,0)"
+Fixed Label clone when there is a backing - must clone the backing too ;-)
+Rearranged vertical Slider to have min at bottom and max at top <em>BREAK</em>
+</div>
+
+<div class="updates">
+<span class="version">ZIM 4.8.2</span>
+Added tab control in frame with tab highlight, highlight object and a number of parameters <strong>IMPROVEMENT</strong>
+This is demonstrated in the LeaderBoard of http://zimjs.com/code/zong
+Will be expanding tab control - currently steppers and tabs - although any display object
+can be added manually to the tabOrder.  So now tabbed to objects can receive an Indicator
+Looking into screen reader support as well - although many things made in ZIM are visual.
+Updated zim.fit() to take into account bound x and y when fitting.
+</div>
+
+<div class="updates">
+<span class="version">ZIM Game 1.0.1</span>
+LeaderBoard has integrated key and gamePad controls for entering name <strong>IMPROVEMENT</strong>
+An editing page has been set up to update five security options <strong>IMPROVEMENT</strong>
+Automatic bad word filter has been added to the ZIM data mode <strong>IMPROVEMENT</strong>
+</div>
+
+<div class="updates">
+<span class="version">ZIM 4.8.1</span>
+Stepper updates - added press, rightForward, downForward parameters to Stepper <em>BREAK</em>
+changed arrows to represent visual arrows - so set to false to hide them
+added arrowKeys parameter to use or not use arrow keys - default true
+changed default vertical forward direction to down unless numbers and then it is up
+can change these with rightForward and downForward parameters
+made it so mousedown immediately advances stepper (unless press is false) <strong>IMPROVEMENT</strong>
+this was an oversight - got missed when implementing hold parameters
+or perhaps we did not want it to advance immediately if users are wanting to hold drag backwards...
+Adjusted Label to accommodate backing in its bounds calculations - assumes if backing the bounds are that of the backing
+Removed the default ZIM Wonder server parameter value as it runs the risk of being out of date <strong>IMPROVEMENT</strong>
+Implemented a zimserver_url.js file that will always hold up-to-date domain:port urls for ZIM Socket, ZIM Wonder, ZIM Distill
+In doing so swapped the server and notes parameters so this <em>BREAKS</em> previous signature - as server is required and notes is optional
+</div>
+
+<div class="updates">
+<span class="version">ZIM 4.8.0</span>
+Added zim.GamePad() to handle game controller input for buttons and sticks <strong>IMPROVEMENT</strong>
+Added zim.MotionController() to handle moving a target object with the following types: <strong>IMPROVEMENT</strong>
+mousedown, mousemove, keydown, gamebutton, gamestick, swipe, manual
+includes adjustable speed, damping, flipping or rotation, key/button mapping, firstPerson mode, etc.
+Damp and ProportionDamp now return the object for chaining
+</div>
+
+<div class="updates">
+<span class="version">ZIM 4.7.3</span>
+Changed zim.Ticker to use requestAnimationFrame with default no throttle <strong>IMPROVEMENT</strong>
+Added setTimingMode() static method to Ticker to go back to synched or timeout modes
+setFPS(mobile, desktop) is still available but can lead to less than smooth performance
+(NOTE: the initial launch of 4.7.3 was not quite right so we patched it a few days after)
+added zim.sign(num) to return -1, 0, 1
+added zim.constrain(num, min, max, negative) to constrain number to within and including bounds
+added zim.dist(x1, y1, x2, y2) to calculate the distance between two points
+Adjusted Frame to stage.update() on full mode resize <strong>IMPROVEMENT</strong>
+After canvas adjustment a few updates ago this was causing flicker
+or things disappearing until next stage.update()
+The stage will not update in full mode on resize if zim.OPTIMIZE is set to true
+You will have to manually update the stage in your resize event function to see anything on the stage
+Adjusted zim.Pane to not do anything to the text when you change it
+If you want the text to be centered always, then start off with a zim.Label with align:center
+</div>
+
+<div class="updates">
+<span class="version">ZIM 4.7.2</span>
+frame.loadAssets() now returns a zim.Queue object where we can capture events for a specific loading
+Also there is an isLoading property on the Queue and reference to the createjs.LoadQueue with a preload property
+The frame also captures these events for all queues as before and now has an overall isLoading property.
+Thanks to Frank Los for prompting the changes and helping with the solution.
+loadAssets() has a new time parameter to force the preload to wait at least this long in ms.
+This can be used in testing and for when you want a minimum time to show a preload message
+Added a showing property to zim.Waiter() and zim.Pane()
+You can now loop an animation inside an animation series forever - it just will not proceed to the next animation
+The set parameter for zim.move() and zim.animate() now lets you set scale (the convenience property for scaleX and scaleY)
+Went back two updates to fix the loopCall parameter which was not calling when looping forever
+since the change to the loopCall to not call on the last loop - use call for that (nice sentence!)
+Added a zim.Dynamo() class to handle dynamic Sprite animation
+You pass the Dynamo a Sprite, a base frames per second an optional label or start end frames
+The Dynamo should be able to parse any type of CreateJS spritesheet data including nested animation labels
+It turns these into an array of frames animates through the frames with percentSpeed available to adjust dynamically
+The Dynamo also allows you to pause with a time delay or a on a frame number - and of course, unpause
+Added a zim.Accelerator() class to handle dynamically changing speed and pausing of Dynamo and Scroller objects
+This allows you to control the objects from one place to dynamically change the speed of a scene
+Upddated the Scroller class to allow for pausing and percentSpeed
+And the Scroller no longer has to be added to the stage to work
+and in either case, the scroller backgrounds do not have to be on the stage to make a Scroller
+See http://zimjs.com/code/zide/ for an example
+</div>
+
+<div class="updates">
+<span class="version">ZIM 4.7.1</span>
+Added zim.interval(time, call, total, immediate), zim.timeout(time, call) that use requestAnimationFrame
+Added zim.siz(width, height, only) for chainable size method
+with either width or height, will scale the other to keep proportion unless only is set to true
+Removed Dashed Lines - as CreateJS now does a dashed stroke. (<em>BREAK</em>)
+Fixed Frame in full mode to resize canvas dimensions rather than create large canvas (<strong>IMPROVEMENT</strong>)
+due to unexpected repositioning in apple devices (of course).
+For instance, how can a canvas with no left and top be moved hundreds of pixels off the screen to the left
+when switching orientations?  Even when left and top are set to 0px;  Get your act together Apple!
+Problem is... it is a problem for ages.
+Added a delay parameter to frame to make mobile devices redo a resize event to catch proper dimensions - default 500ms
+made Pane and Waiter show() and toggle() chainable
+adjusted zim.rand() to convert parameters that are NaN to 0
+Adjusted zim.animate() and sprite.run() to let inner animation series loop forever
+this will make the looping forever series the last animation to run in the series
+added frame.clear (alpha 0), frame.white, frame.black, frame.faint to colors - faint is alpha .01 good for invisible interactivity
+</div>
+
+<div class="updates">
+<span class="version">ZIM 4.7.0</span>
+major update to zim.animate() to run animation series
+also better id control for pauseZimAnimate() and stopZimAnimate() <strong>IMPROVEMENT</strong>
+now documented as proper methods and with optional global control on zim directly.
+removed zimTween from move() and animate() and added reference to zimTweens (<em>BREAK</em>)
+removed stopZimMove and pauseZimMove - use stopZimAnimate and pauseZimAnimate for all (<em>BREAK</em>)
+adjusted loopCall to not run after the last loop - that is when call runs (<em>BREAK</em>)
+changed rewind props to be set after initial wait
+added set parameter to move() and animate() to set properties at start of animation
+updated docs for move() and animate()
+Sprite.run() uses new animation series and stopRun() and pauseRun() use animation id system.
+Sprite has json parameter which replaces spriteSheet parameter <em>BREAK</em>
+The SpriteSheet is now made internally from the json
+can still pass in rows and cols as well instead of json
+added makeID() method to code module
+frame now gives the stage read only stage.width and stage.height properties
+added single param (default false) to zim Dictionary
+added reg() and sca() methods for consistent shortcuts to regX, regY, scaleX and scaleY
+</div>
+
+<div class="updates">
+<span class="version">ZIM 4.6.0</span>
+added addTo() and removeFrom() functions / ZIM 4TH methods
+these are wrappers for addChild() / addChildAt() and removeChild()
+except they are consistent with center() and centerReg() where the obj comes first and the container is in the brackets
+circle.addTo(stage); // rather than stage.addChild(circle);
+circle.center(stage);
+circle.centerReg(stage);
+circle.removeChild(stage);
+This also allows us to chain objects easier
+var circle = new zim.Circle().addTo(stage);
+var circle = new zim.Circle().addTo(stage).drag();
+Added pos(x, y), mov(x, y), alp(alpha), rot(rotation), ske(skewX, skewY) functions / ZIM 4TH methods
+chainable functions for common properties (a little shorter than set() method)
+Note: pronounce mov() as "mawv" to differentiate from move()
+mov() sets relative position in x and y - like circle.x += 100;
+var circle = new zim.Circle().center(stage).mov(100); // shifts shifts to right 100
+Added zim Swiper() class to Pages module to act like invisible slider with damping
+Overhauled zim Sprite() to include the SpriteSheet and data creation
+also added a run() method to animate the Sprite over time (see advanced ZIM Capture)
+This gives two line Sprite animation with better control (<em>BREAKS</em> signature)
+It still works with a CreateJS SpriteSheet if desired.
+And optionally, you can pass in the JSON for the spritesheet.
+Added keydown and keyup events to frame - wrappers for window events
+Pages now dispatches a pagetransitioned event - not pageTransitioned (<em>BREAKS</em>)
+removed secondary reference to colors in frame (<em>BREAKS</em>)
+added frame.gray (already have frame.grey - these two are the same)
+arrow keys for stepper now move secondary steps if in cross direction
+also made stepper secondary arrows only show up for type of number
+adjusted loop() to pass index, total, min, max, obj consistently as final params to call (<em>BREAKS</em>)
+also added internal bounds to loop to handle out of bound step, start and end values
+adjusted loop documentation to be more clear - should be the end of loop adjustments
+corrected the zim Swipe docs to not include container properties
+corrected frame variable (should have been this) to fix bug in strict mode
+adjusted scaleTo() to scale to 100% in x and y when both are null - still default "fit"
+so just using rect.scaleTo(stage) would fit the rect on the stage
+previously, passing in no percentages would not scale at all.
+adjusted typo in parallax Docs - scrolly should have been scrollY
+rand() now has negative parameter to let you choose from a positive or negative range
+ZIM Frame loadAssets() has been adjusted to include extra file types:
+JSON, Text, XML, and SVG data can be loaded (as per CreateJS PreloadJS info)
+</div>
+<div class="updates">
+<span class="version">ZIM 4.5.0</span>
+added a from parameter to zim.move and animate
+you can set the from parameter to true to animate to current values from properties provided in obj
+sequence in move and animate now works on a container as well as an array
+added sequenceReverse parameter (<em>BREAKS</em> parameter order!!!) to handle sequencing through children (or elements) backwards
+added a zim.ANIMATE global constant to prevent move and animate from running (eg. while testing)
+added a check to move and animate for targets not on stage - to avoid the obtuse Ticker error message
+<strong>IMPROVEMENT</strong>: updated Stepper with a bunch of new parameters:
+hold, holdDelay, holdSpeed, drag, dragSensitivity, dragRange, type,
+min, max, step, step2, arrows2, arrows2Scale, keyEnabled
+also set keys work on Stepper only if they have focus or are first made
+added focus property to Stepper
+changed the strokeColor to borderColor - <em>BREAKS</em> old code... (sorry - now we consistently use border rather than stroke)
+adjusted stepper to not return when setting currentIndex and index is same as currentIndex (might have changed the stepperArray)
+also made setting the stepperArray update the currentIndex which will refresh the view
+adjusted slider, dial, stepper currentValue to return if value set to undefined
+zim.decimals(num, decimals, addZeros) will add zeros to decimal place if missing - for presentation
+<strong>IMPROVEMENT</strong>: set drag to work if mouse is outside stage - on now by default - should have been on (oversight)
+added a fadeTime parameter to Waiter and Pane to fade in and out for the provided milliseconds
+added step, start and end parameters to zim.Loop took away total parameter (<em>BREAKS</em>)
+added ZIM DUO to loop now that parameters are longer...
+gave Circle a radius property get / set - that redraws the circle (not scales it like width and height)
+Circle, Rectangle, Triangle parameter change - <em>BREAKS</em> zim DUO for the following:
+color (not fill), borderColor (not stroke) and borderWidth (not strokeSize)
+also the methods setFill(), setStroke() and setStrokeColor have been removed (<em>BREAKS</em>)
+added borderColor and borderWidth properties - already have a color property
+changed the borderThickness properties in Button and Window to borderWidth to match (and match css) - <em>BREAKS</em> zim DUO for these
+added width, height, fullscreen parameters to zgo and shifted modal parameter to end (<em>BREAKS</em>)
+made rand() set integer to false if a or b are not integers
+added backing color to ColorPicker
+fixed little glitch in animate() ticker paramater
+Reordered EXAMPLES so ZIM 4TH versions come before the traditional zim functions
+</div>
+<div class="updates">
+<span class="version">ZIM 4.4.0</span>
+<strong>IMPROVEMENT</strong>: hitTests improved by having mathematical hitTestBounds as filter
+made it so can't add gradient or gloss if custom backing
+fixed hitArea on indicator when square type is chosen
+fixed indicator to update selectedIndex before dispatching change events
+added swipe to window doc
+made zim.loop() the name for all zim loops again and adjusted docs (<em>BREAKS</em>)
+</div>
+<div class="updates">
+<span class="version">ZIM 4.3.1</span>
+Added read/write width, height, widthOnly, heightOnly properties to all zim displayObjects
+Could <em>BREAK</em> old code where width and height were read directly from getBounds().width and getBounds().height
+now they are getBounds().width*scaleX and getBounds().height*scaleY so they match the set width and height.
+This is a fairly big change - now when you can set the width and this will adjust the scale to make the shape match the width inside the parent bounds
+If you want to get the width of the bounds without scale - then use getBounds().width
+It also means that the scale will probably be changed when you set width and height.
+Hopefully this will not cause too many problems.  We went through the 64 ZIM Bits and adjusted a couple places
+In one case we had to go back to the getBounds() but in another case it helped the app be more intuitive and we removed a tricky scale call
+Added prop(property, value) method to zet to get or set the a property (or properties) of the set.
+Adjusted docs to more explicitly list CreateJS methods, properties and events for each Build Module class
+Made RadioButtons have a default of A, B, C
+Fixed zim.drag surround to handle bounds with x and y not equal to 0 (like for a circle)
+Fixed rotated container origin marking for zim.outline
+Removed bound requirement from center.  Removed container bound requirement from centerReg
+</div>
+<div class="updates">
+<span class="version">ZIM 4.3.0</span>
+introduced zim.extend(sub, super, override, prefix, prototype) which piggybacks on createjs.extend and createjs.promote
+now all extends are done using this so that ZIM classes can be properly extended
+this means that the createjs namespace must be loaded before ZIM - too bad, but that's okay
+So if you load ZIM before CreateJS this <em>BREAKS</em> and gives a ZIM message followed by an error - most likely Frame is not a function
+Just put the createjs script call above the zimjs script call.
+all classes are now one function - had to add the scope parameter (this) to zob() for these.
+<strong>IMPROVEMENT</strong>: fixed memory leak in Button - was not clearing mouseout event - off() sometimes does not work!
+updated RadioButtons dot to default .7 alpha in color
+fixed sequence to take into account the new loopCall and loopParams
+had to adjust loop() so that a return is used to continue and a return with a value is used to break
+return "continue" no longer continues it actually breaks - the function is only one version old so may as well fix it
+moved loop() to code module and made loopChildren() in Create module for containers - may adjust this later
+this <em>BREAKS</em> if you were using loop() on container
+updated the Button description and added pizzazz to icon param description
+<strong>IMPROVEMENT</strong>: added a rollPerSecond parameter to zim.Frame with a default of 20 checks per second (was set at 10)
+</div>
+<div class="updates">
+<span class="version">ZIM 4.2.1</span>
+added a setBackings(newBacking, newRollBacking) to match the setIcons() in Buttons
+also made toggle work for backings if there is no icon set and it is not a string (to toggle label)
+adjusted the docs to wrap the signature of the function when you open a section
+fixed clone of button to make sure all new paramters get cloned
+adjusted hitArea of label to not be stored as the backing when no backing
+as it caused clone problems - the clone then thought a backing was set when it was just the hitArea
+</div>
+<div class="updates">
+<span class="version">ZIM 4.2.0</span>
+added icon and rollIcon parameters to button to accept display object like pizzazz2 icons
+added setIcons(newIcon, newRollIcon) method to button to allow dynamically changing the icons
+added toggle and rollToggle parameters to button to handle toggling the label or icons
+added toggled property to button that returns true if in toggled stage and false if in original state
+added toggle() method to button to force a toggle (or set state to true or false)
+added 2px to height of text in labels to accommodate descenders
+added loop() function to Create Module to loop or loop through children of container
+tested with 1000 children and no speed difference
+added isEmpty() function to test if object literal is empty
+added loopCall and loopParams parameters to move() and animate()
+and adjusted call to call after all loops and rewinds have finished
+(always thought this was what it was doing but realized NOT)
+this change <em>BREAKS</em> the signature - sorry - but hopefully you are using ZIM DUO config for this
+added protect parameter to move and animate to ensure animation finishes
+cancels any subsequent animation calls
+added override parameter to move and animate to allow multiple animations on an object
+without having to set props:{override:true} - does the same thing
+updated ZIM 4TH version of move and animate to full parameter set
+removed pauseZimMove, stopZimMove, pauseZimAnimate, stopZimAnimate when tween is done
+added color property to stage to get or set background color (there already is a color parameter)
+fixed dial setting currentValue if max is less than min
+added read-only angles property [left, bottom right, top right] to Triangle
+<strong>IMPROVEMENT</strong>:adjusted zim.Dial to record last angle when clicked to avoid wrapping when not supposed to
+</div>
+<div class="updates">
+<span class="version">ZIM 4.1.3</span>
+added stage.update to colorPicker when indicator present (follows zim.OPTIMIZE)
+made indicator #111 when color is #000
+added copyMatrix function to Create Module and use it in move, animate, setMask, drag and clone
+made move and animate work with setMask to animate the mask (like drag drags the mask)
+</div>
+<div class="updates">
+<span class="version">ZIM 4.1.2</span>
+ColorPicker has circles property added for circle swatches
+ColorPicker has buttonBar property added to be able to set to false and hide buttons
+added indicator parameter defaulting to true that shows currentColor
+added selectedIndex property to ColorPicker
+recorded lastColor and lastAlpha when setting selectedColor, selectedIndex and selectedAlpha
+added id parameter to place method
+<strong>IMPROVEMENT</strong>: fixed Button to center custom label after label bound changes in 4.1.1
+added specific clone methods to Rectangle, Circle and Triangle
+added rollPersist parameter and property to Button to keep rollColor when button being pressed even if rolled off
+made slider use rollPersist=true
+added gapFix back to scroller - still getting very thin gap if changing speeds - gapFix:1 should do it - default 0
+adjusted move and animate to not run another animation for properties that are currently looping or rewinding
+when these are done or the tween removed with stopZimMove or stopZimAnimate then animating these properties is okay again
+problem was the tweens if overwritten would start from their last stopping spot
+</div>
+<div class="updates">
+<span class="version">ZIM 4.1.1</span>
+added backing to Label
+added position:absolute to Frame (fit, full, outside) so no styles required up top now
+removed depreciated stageW and stageH properties from Frame (use width and height) (<em>BREAKS</em>)
+fixed up bounds of label (I hope) and adjusted button placement
+added fontOptions to Label clone
+this could affect making a custom cursor out of a label - now need to set the mouseEnabled of label false
+</div>
+<div class="updates">
+<span class="version">ZIM 4.1.0</span>
+Added backing and rollBacking support to zim.Button and zim.Pane (not rollBacking)
+<strong>IMPROVEMENT</strong>: Fixed hitArea on zim.Label when centered
+changed Pane move cursor to pointer
+changed Pane backing property to backDrop to avoid confusion with new backing parameter
+added toggle() method to Pane
+added pointer cursor to Pane display when displayClose is true
+</div>
+<div class="updates">
+<span class="version">ZIM 4.0.1</span>
+Updated docs to have proper sentences for description.
+Adjusted zim.Triangle() to make isosceles have a unique base number
+(makes triangle symmetrical about the Y axis).  This causes different behaviour.
+Fixed glitch in dragRect() for when no previous rect specified and localBounds set to true
+Refactored zim.Window - added paddingVertical and paddingHorizontal
+and indicatorDrag - which <em>BREAKS</em> the signature - sorry.
+</div>
+<div class="updates">
+<span class="version">ZIM 4TH - 4.0</span>
+added zim Container, Shape, Sprite, MovieClip display wrappers
+these extend are made from CreateJS counterparts
+but they all have the ZIM Create functions added as methods
+and they also have read only width and height properties based on getBounds
+all ZIM display objects now extend a zim.Container
+fixed zim.Drag glitch with removing zimDragTicker
+fixed label to center properly when text is updated
+adjusted documentation on width and height of button read only
+added reference to AbstractContainer methods in all display object docs
+added reference to createjs docs in docs
+added RETURN values in documentation for every function
+added EXAMPLE for every command in the documentation
+added PARAMETERS for every function in ZIM Create module (already in other modules)
+added global function isDUO to test if parameters are in config object format
+added clone to all objects including cloned basic properties
+and recursive cloning for Container and Window
+moved Parallax and Scroller to the end of the PAGES module
+this gives clean break with all display, shapes and components in BUILD
+Renamed ZIM DISTILL to ZIM META
+and added zim.Wonder to META
+added a check to see if objects are on stage for all hitTests
+added zil to fit and outside scale modes too
+added fontOptions to zim.Label - for ordered font-style font-variant font-weight
+did not realize that these can't be put after the font-size... sigh
+adjusted gloss and gradient to not go over the border of the buttons
+added startBounds (true) to drag() set to false to ignore bounds on start
+inserted color parameter into Frame after height - will <em>BREAKS</em> legacy code
+added css parameter to animate - set to true to animate html tags with css
+added PARAMETERS section to all documentation
+made section titles different color in docs
+made example for each and have that be boxed
+added props to normal parameters for animate and move
+</div>
+<div class="updates">
+<span class="version">ZIM 3.1.4</span>
+Removed fps from animate and move - signature change at end!
+Handle fps via zim.Ticker
+adjust Frame to recognize tag scaling inside DOMContentLoaded
+added one, two and three properties giving points for corners of Triangle
+adjusted cloneAsset() method of Frame to clone id
+</div>
+<div class="updates">
+<span class="version">ZIM 3.1.3</span>
+Fixed Ticker default fps
+</div>
+<div class="updates">
+<span class="version">ZIM 3.1.2</span>
+added id to asset property on assetloaded event object
+added getStage method to sound instance of asset so can animate volume and pan
+added stopZimAnimate, stopZimMove, pauseZimAnimate and pauseZimMove
+for the target of animate and move functions
+tab to flatbottom default
+added scrollXMax and scrollYMax to window
+added index to center and centerReg that works like addChildAt()
+</div>
+<div class="updates">
+<span class="version">ZIM 3.1.1</span>
+added Window class to Build module
+added slideSnap of vertical and horizontal in drag create module
+added slidestop event to documentation for drag
+added lineWidth and lineHeight properties to zim.Label
+added cloneAsset() to zim Frame for copying images and keeping width and height props
+</div>
+<div class="updates">
+<span class="version">ZIM 3.0.4</span>
+adjusted zim.Button to center the logo
+todo - make hitTestRect and hitTestCircle have an offset parameter
+todo - change tabs and grids to use hitTestGrid for rollovers and hits
+add a backing color and padding parameters to label
+</div>
+<div class="updates">
+<span class="version">ZIM 3.0.3</span>
+added zim.mask() to work with ZIM Rectangle, Circle and Triangle
+adjusted zim.Frame to default to tagID + "Canvas" for canvas ID
+no changes to zim.Frame if on any other scaling mode
+</div>
+<div class="updates">
+<span class="version">ZIM 3.0.2</span>
+rotated zim.outline()
+fixed bug in ZIM Dial so it properly takes into account custom start position in dragging calculations
+adjusted buttons to have centered labels
+</div>
+<div class="updates">
+<span class="version">ZIM 3.0.1</span>
+added valign to Label params
+valign - defaults to "top".  Options: "top", "middle / center", "bottom"
+fixed DUO for center() (was pointing at centerReg)
+fixed center() bug with rotated and scaled containers
+adjusted outline() to show rotated origin
+</div>
+<div class="updates">
+<span class="version">ZIM TRI - 3.0</span>
+added align and valign to frame
+changed ZIM Frame to work on DOMContentLoaded and for delayed canvases, on document.readyState=="interactive" or "complete"
+also made resize event trigger for all scale modes not just full
+added sound parameters to asset().play(params) for {loop:-1, volume:.5}, etc.
+drag default dragging cursor is pointer rather than resize
+added swapHTML to swap innerHTML of two tag references
+added zet(selector) function with on(), css() methods to apply events and properties to selectors
+added a tag option for ZIM Frame scaling parameter to put Frame into an HTML tag
+like a full setting with no scaling but in the dimensions set by the tag
+added a scale property (read only) to ZIM Frame (will be 1 for full and none)
+added an x and y property to frame position added by Frame (0 and 0 for full and none)
+added a canvasID parameter to ZIM Frame to handle multiple canvases on one page
+added a readyState check to ZIM Frame in case loading it after the window load event has triggered.
+added add parameter to centerReg in DUO modes
+added a zim.center() function that works like centerReg with a container but does not center the registration point
+adjusted centerReg() and center() to move to center relative to container even if not adding to container
+adjusted centerReg() to test for bounds on container
+added multiple stage support for ZIM Ticker
+adjusted ZIM move and animate to wait 200ms before removing Ticker function to let animation finish
+added objects and values properties to ZIM Dictionary for easy traversal
+added rotation support to zim.Outline
+adjusted hitTestCircle() and hitTestRect() to check for a point in the middle too
+made zim.Drag() automatically remove the tweens from dragged object
+and then set a parameter called removeTweens which defaults to true
+made ZIM drag add to Ticker queue only on mousedown and off on pressup
+added displayClose parameter to zim Pane() to default to true
+if display backing is pressed it closes unless drag set to true of displayClose set to false
+set Pane's Label to mouseEnabled = false;
+this is different behavior to original Pane settings where display press would not close Pane
+</div>
+<div class="updates">
+<span class="version">ZIM 2.6.1</span>
+BUG FIXES
+CREATE
+fixed bug in zim.Ticker - was not storing stage when always was used alone
+BUILD
+added rounding to non-divisible steps in Slider
+added inside parameter to Slider documentation
+FRAME
+added frame.tin for the #777777 color missing between silver and grey
+added frame.purple for dark accent color
+frame.lighter color needed an extra e.
+ZIM 2.6.1 Updates - centerReg, labelColor, checks, makeCircles, etc.
+CREATE:
+added an add parameter (default true) to zim.centerReg()
+which automatically adds object to the container if container is provided
+so zim.centerReg(rect, stage); will center the rect on the stage and addChild to the stage
+a touch of a risk as it may be better to always let people addChild - but I do this so often
+that I thought I might bend a little.  You can pass false as a third param to avoid the addChild
+BUILD:
+added labelColor to Tabs and Pad classes (<em>BREAKS</em> signature near end - sorry) BUILD
+updated Pad documentation
+adapted Stepper label to use new centered Label text
+added optional type of checkbox for x and square checks
+RadioButton, CheckBox, Stepper no longer dispatch change events when set with properties like selectedIndex
+so only dispatches change on user input - this changes the behaviour of older zim
+FRAME:
+has a 250 and 500 ms refresh added to resize events due to mobile delay in changing dimensions
+added zon error message to missing sound assets so play() will not break app
+added zim.makeCircles() function which ZIM circles for logo
+TODO - move last placed object with arrows - CREATE
+</div>
+<div class="updates">
+<span class="version">ZIM 2.6</span>
+CREATE
+Added id to zim.place()
+BUILD
+Added Pad component
+Added Dial component
+Added inside parameter to Slider to fit button inside bar
+Added press on bar to move slider to position
+Adjusted Tabs to alternately take an array of numbers or strings as tabs parameter
+Changed Tabs font size to half height
+Changed Tabs auto to currentEnabled (just the click on current tab is not enabled)
+must now set color and selectedColor to same to be like button
+Fixed Tabs dispose
+Fixed Button dispose
+Fixed 0 glitch in Label "" == 0 what do you know!
+FRAME
+added ZIM colors as properties
+edit all links to https:for cdn
+-> need to add pause property to scroller
+</div>
+<div class="updates">
+<span class="version">ZIM 2.5</span>
+MOVE & ANIMATE
+added support for moving and animating an array of objects
+including a sequence parameter to set time delay of animations on array
+this makes marquees, etc.
+this means that zim.copy() has to be copied into the stand alone CREATE module
+added loopDelay property to move and animate props parameter
+this adds a delay after the animation happens (and before a looped animation)
+DRAG
+Added surround, slide, slideDamp, slideSnap and reg params to Drag in CREATE
+added dragRect() to dynamically set the drag rect in Create
+TICKER
+added Ticker class to Create module - and any that use Tickers
+need to add Ticker class to stand-alone BUILD module
+removed ticker parameter from any zim functions
+made zim.move and zim.animate use the zim Ticker
+made zim.drag use the zim Ticker
+made zim.Parallax and zim.Scroller use the zim Ticker
+MISC
+added Dictionary class to CODE module
+adjusted zim.mobile() to return "android", "Apple", "blackberry", "windows", "other" or false
+Scroller added startPos and endPos params in BUILD
+Fixed globalToLocal issues in Scroller
+added place() method to CREATE to position things and get location in console
+Added text property set and get to CheckBox in BUILD
+Added display parameter to stepper to show or hide the text display
+Fixed small bug in stepper in setting currentValue and currentIndex
+added tripple screen support to max canvas size (which also fixes android sizing bug) in FRAME
+added registration support to zim.fit() - might change your code!
+added a display parameter to zim Stepper to show (default) or hide the display
+switched the arrow direction on vertical Stepper too - sorry up arrow activates arrow on top (<em>BREAKS</em>)
+added align parameter to text for left (default), center and right
+fixed alignment formula for Pane
+fixed target in zgo() for WRAP - was always opening in _blank
+return v==null; used for zot(); in WRAP
+Fixed Proportion to work with larger number first
+consider default container.addChild(obj) for zim.centerReg(obj, container)
+</div>
+<div class="updates">
+<span class="version">ZIM 2.4</span>
+ColorPicker component
+gave slider a width and height property
+fixed Waiter default shadowColor to #000 with alpha
+</div>
+<div class="updates">
+<span class="version">ZIM 2.3</span>
+CREATE
+Added a hitTestGrid function
+Added a paddingVertical to expand so can optionally provide different padding in horizontal and vertical
+BUILD
+added zim.OPTIMIZE and zim.ACTIONEVENT constants
+OPTIMIZE defaults to false but if set to true, components will not stage.update for any presses or property sets (only for mouseover/out)
+ACTIONEVENT defaults to "mousedown" and if set to something else then changes to click - can toggle this with zim.mobile() if desired
+Added Tab component
+added color and rollColor properties to set dynamically on button
+fixed enabled bug on button (set mouseChildren false after re-enabling)
+added color of label and roll dynamically
+PAGES
+exposed the regions object of the Layout class for dynamic alteration to Layouts - must call resize() after changing.
+made HotSpots and HotSpot follow zim.ACTIONEVENT
+Pages documentation should have read lastPages not oldPages
+FRAME
+made zim.Frame set default rollover to !zim.mobile() (a quick test for mobile)
+</div>
+<div class="updates">
+<span class="version">ZIM 2.2</span>
+added fps and ticker properties to move and animate to create module
+added fps and ticker properties to parallax and scroller in build module
+added mobile function to code module
+updated parallax module with fps and ticker
+</div>
+<div class="updates">
+<span class="version">ZIM 2.1</span>
+Added always parameter to RadioButton
+Fixed margin on Checkbox
+Made checked always black but can set color with check.color
+Made RadioButton selectedIndex property call a change event if set
+Made CheckBox selected property call a change event if set
+Made Stepper currentIndex property call a change event if set
+Added enabled property to button, checkbox, radio, slider, stepper
+</div>
+<div class="updates">
+<span class="version">ZIM DUO - 2.0</span>
+We now minify all the modules and the full zim code under just the zim and version number, i.e. zim_2.0.js.
+So no more _min.  The only file that is human readable has _doc after the version number, i.e. zim_2.0_doc.js.
+Added zob() which allows us to provide a single configuration object for many of the zim functions
+CREATE
+animation loop fix
+added count
+added target return in call with no params
+added scale convenience to animate
+flipped the ease if doing rewind for move and animate
+added expand() function to zim create module
+BUILD
+fixed Pane shadow to alpha
+fixed bug in resets and documented as default true
+pane center parameter now documented and adjusted to remove all centering if set to false
+fixed Label with 0 value bug
+fixed Stepper arrow loop bug
+added Stepper to press on box
+changed default Stepper to go from 0-9
+Waiter does not dispatch a close event
+made Slider class
+fixed initial RadioButtons id bug
+</div>
+</pre>
+
+
+<a href="index.html" class="plain"><img id="logoB" src="vee/logo_dark.png" border="0" width="100" /></a>
+
+<script>
+var r=Math.round(Math.random()*1000000);
+document.write('<img src=/cgi-bin/traffic_plus?company=danzen&page=zimUpdates&r='+r+' width=1 height=1>');
+</script>
+
+</script>
+
+</body>
+
+</html>
+
+</body></html>
