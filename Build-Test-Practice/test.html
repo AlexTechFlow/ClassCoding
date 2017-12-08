@@ -231,6 +231,9 @@ frame.on("ready", function() {
 		// makeBlob();
 		function makeBlob() {
 			zog("makeBlob");
+            
+
+            
 
 			// put code here
             blob = new Blob({
@@ -239,7 +242,7 @@ frame.on("ready", function() {
 
             }).center(stage);
              
-         
+            blob.shape.cursor = "pointer";
 
 
 			stage.update();
