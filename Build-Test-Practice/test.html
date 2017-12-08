@@ -202,11 +202,11 @@ frame.on("ready", function() {
                 size: 50 
             	});
 
-            tile = new Tile(backLabel, 10, 15).alp(.1).center(stage);
+            tile = new Tile(backLabel, 10, 15).alp(.1).addTo(stage);
   
             stage.update();
 
-            tile.cache(); //?????  0,0,stageW,stageH
+            tile.cache(0,0,stageW,stageH); //?????  0,0,stageW,stageH
 
 			makeBlob();
 			stage.update();
@@ -233,9 +233,7 @@ frame.on("ready", function() {
 			zog("makeBlob");
             
             
-            
-
-			// put code here
+      		// put code here
             blob = new Blob({
 
             	points:squiggle.recordPoints()
