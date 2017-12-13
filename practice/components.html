@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>IC Practice - Components and Controls</title>
+
+<!-- Welcome to ZIM at http://zimjs.com - Code Interactive Media Pizzazz! 	        -->
+<!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS http://createjs.com -->
+<!-- Founded by Inventor Dan Zen - http://danzen.com - Canadian New Media Award Winner 	-->
+<!-- ZIM is free to use. You can donate to help improve ZIM at http://zimjs.com/donate 	-->
+
+<script src="libraries/createjs.min.js"></script>
+<script>
+	var zon = true; // set to false to turn off console messages from zim
+	var zns = false; // set to true to require zim namespace - eg. new zim.Frame()
+</script>
+<script src="libraries/zim_6.7.3_doc.js"></script>
+<!-- use zimjs.com/code/distill for minified individual functions! -->
+
+<script>
+
+// SCALING OPTIONS
+// scaling can have values as follows with full being the default
+// "fit"	sets canvas and stage to dimensions and scales to fit inside window size
+// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
+// "full"	sets stage to window size with no scaling
+// "tagID"	add canvas to HTML tag of ID - set to dimensions if provided - no scaling
+
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+
+// as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
+var frame = new Frame(scaling, width, height);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+    frame.outerColor = frame.grey;
+    frame.color = frame.light;
+
+
+	// COMPONENTS
+
+	// 1. Make a vertical Slider and center it on the stage - move it to the left 200 pixels and give it a min of 0 and max of 50.
+	// Set the currentValue of the slider to 0
+	// make the slider button frame.orange and round (width height 60 and corner 30) with a highlight color of frame.orange
+
+
+
+
+	// 2. Make a Dial and center it on the stage and move it 300 pixels to the right and give it a min and max of the slider min and max
+	// and a currentValue of the slider's current value  - Make it frame.orange and a width of 200
+
+
+
+
+	// 3. Make it so when you slide the slider it turns the dial so the values match
+
+
+
+
+	// 4. Make it so when you turn the dial the slider slides to match the values
+
+
+
+
+
+	// 5. Add a ColorPicker with 4 colors - frame.orange, frame.red, frame.blue and frame.pink
+	// Do not have a grey picker nor an alpha picker nor a buttonBar and give it a width of 300 and cols of 4
+	// Add it to the bottom right corner of the stage with a margin of 30 at bottom and right
+	// make is start with the selected color of frame.orange
+
+
+
+
+
+	// 6. Change the color of the dial and slider to the color of the Picker when the picker changes color
+
+
+
+
+
+	// 7. Add a frame.red Triangle at the top left corner that points to the right make the sides 100 pixels.
+	// Make the Triangle flash 5 times and then stop.
+	// When the Triangle stops, animate in from the right side of the stage at the same height as the Triangle
+	// a centerReg'd CheckBox and make it stop 100 pixels from the triangle
+
+
+
+
+
+	// 8. When the CheckBox is checked, show a TextArea that has the placeholder "Type and Press ENTER" to the right of the CheckBox.
+	// When the CheckBox is unchecked, remove the TextArea - you will need to call the resize() method on the TextArea.
+	// Make the TextArea 40 in size and a width of 500
+
+
+
+
+
+	// 9. Use the keydown event of the frame to test for the keyCode of the ENTER key.
+	// Use the TextArea hasFocus property (new to ZIM 6.7.3)
+	// and if the TextArea has focus and the stage.contains(textArea) - contains() is CreateJS method then
+	// add the text of the TextArea to a Label and position the label in the bottom right corner
+	// also remove the CheckBox and the TextArea
+
+
+
+
+
+	// 10. Make a function called secrets and call the function from the ENTER code above
+	// pass in the text from the textarea or label as a single parameter
+	// Create a variable called code that holds the first four letters of the letters in the TextArea or Label.
+	// Use the substr(start, length) method of a String
+	// also chain on the toUpperCase() method to turn the String uppercase
+	// zog the code variable to make sure this works
+
+
+
+
+	// 11. In the secrets function from now on!
+	// Add a Pad of width 100 to the center of the stage with 2 columns and 2 rows that say the first four letters
+	// Just pass the code string to the keys and use the toUpperCase() method of a String to turn them uppercase
+	// make sure to update the stage
+
+
+
+
+	// 12. Create an Indicator with 8 lights and set the fill parameter to true
+	// Place the indicator somewhere nice - temorarily use the place() method on the indicator
+	// drag the indicator and look at the pos() in the console - use the desired pos() to place the indicator.
+	// Comment out the place() when you are done.
+
+
+
+
+	// 13. Set the alpha of the indicator to 0 and when you first change the pad, fade in the indicator.
+	// Use a check variable set to true outside the change event to say it is the first check
+	// Then in the change event, if the firstCheck variable is true then fade the indicator
+	// Then after that, set the firstCheck to false so it does not fade in again.
+	// This is an example of logic - there is no functions, etc. for it - you make it with variables and conditionals
+
+
+
+
+	// 14. Before or after the change event, make an array that holds two copies of each of your four letters
+	// To do so, make a variable called double and store in it code concatenated to code (using the +)
+	// Then use the split() method of a String to split the double string up by "" - this puts every letter into an array
+	// assign this to var solution then use the ZIM global function to shuffle(solution)
+	// zog the solution to see if you have your two sets of letters all shuffled in an array.
+	// Create a var answer and set it equal to an empty array []
+	// We will make a memory puzzle to let the user match their answer to the solution
+
+
+
+
+	// 15. Back in the change event, push the pad's text property into the answer array.
+	// Check this value against the solution at the index of the answer's length-1
+	// if these are different then set the selectedIndex of the Indicator to -1 and set the answer array to []
+	// if this letter is correct then set the selectedIndex of the Indicator to the answer.length-1
+	// and stage.update()
+
+
+
+	// 16. In the conditional for when the letter is right, also check to see if the indicator is full!
+	// If the answer's length == solution.length then show a frame.yellow ZIM Pane that says "SUCCESS!"
+	// Test the Pane quickly by testing to see if the lengths are not the same !=
+
+
+
+
+
+
+	stage.update(); // this is needed to show any changes
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>

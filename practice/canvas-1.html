@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>IC Practice - Canvas</title>
+
+<script src="libraries/createjs.min.js"></script>
+<script>
+	var zon = true; // set to false to turn off console messages from zim
+	var zns = false; // set to true to require zim namespace - eg. new zim.Frame()
+</script>
+<script src="libraries/zim_6.7.3_doc.js"></script>
+<!-- use zimjs.com/code/distill for minified individual functions! -->
+
+<script>
+
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+
+// as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
+var frame = new Frame(scaling, width, height);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+    frame.outerColor = frame.grey;
+    frame.color = frame.light;
+
+
+	// CANVAS BASICS
+
+	// 1. Briefly define the canvas that we have been using.  [1]
+
+
+
+
+
+	// 2. Make a green Circle with radius of 20 and store it in a variable. [3]
+
+    var circle = new Circle(20, frame.green);
+
+
+
+	// 3. Add the Circle to the stage in THREE different ways. [3]
+
+
+    // circle.addTo(stage);
+
+    //   circle.centerReg(stage);
+    
+    circle.center(stage);
+
+
+
+	// 4. Outline the circle on the stage to see the bounds, origin and registration
+	// Which shape is registration?
+	// What is the x and y value of the top left corner of the bounds of the shape [3]
+
+
+    circle.outline(frame.pink, 1).centerReg(stage);
+
+  
+
+
+	// 5. Move the Circle to 100, 100 and make it half transparent and twice as big.
+	// do this without chaining using properties and with chaining using methods  [3]
+
+
+/*    circle.move(100, 100)
+          .alp(0.5)
+          .sca(2);
+*/
+     
+     var circle2 = new Circle(40, frame.red);
+     circle2.x = 100;
+     circle2.y = 100;
+     circle2.addTo(stage);
+
+
+
+	// 6. What command is needed to make the above changes visible?  [1]    
+
+
+     stage.update();
+
+
+
+	// 7. Make a Container as big as the stage and add it to the stage. [2]
+	//    Call the container holder.
+
+
+    //var holder = new Container(stageW, stageH).addTo(stage);
+
+    //zog(stageW, stageH); 
+
+     		var holder = new Container(stageW, stageH).addTo(stage);
+
+
+	// 8. Make a Button with size 200, 200 and a label of "REMOVE"  [3]
+	//    Center the button in the container.
+
+    var button = new Button({
+    	label:"REMOVE",
+    	width:200,
+    	height:200
+    }).addTo(holder)
+      .pos(200, 200);
+
+
+	// 9. Put a click event on the Button to remove the button from the holder [2]
+
+   
+    //----------------------------------------------------------------------------------------WHERE DO I FIND INFO ABOUT ZIM EVENTS    ????----------------//
+
+
+    button.on("click", function(){
+    	zog("click");
+    	//button.outline(frame.blue, 1);
+    	//button.move(300, 300);
+    	button.removeFrom(holder);
+
+    	stage.update();  // --------- NECESSARY TO SEE THE CHANGES or you won't see removeFrom changes------- SHOULD BE INSIDE THE FUNCTION  !!!!!  ----///
+
+
+    });  // end of click
+
+
+
+
+	// 10. Write the line of code to load an image called egg.jpg in the assets folder. [2]
+
+
+   frame.loadAssets(["egg.png"], "assets/"); 
+
+
+
+	// 11. Assuming ALL your previous code is in the frame.on("complete", function(){});  [2]
+	//     Write the code to add the egg.jpg asset to the container at position 500, 500
+
+
+
+//-----------------------------------------------------------------------------------------------   WHY DO I NEED FRAME.ON HERE   ???? ---------------------//
+
+    		frame.on("complete", function() {
+
+			var egg = frame.asset("egg.png")
+				.addTo(stage)
+				.pos(500, 500);
+            
+    	    stage.update(); 
+   
+
+
+
+
+	// 12. Make the egg draggable.  [1]
+
+              egg.drag();
+     
+
+	      
+	// 13. How would we make a copy of the egg?  [1]
+
+
+//--------------------------------------------------------------------------------------------- I CANNOT FINE CLODE IN DOCS ??? ----------------------------//
+
+              
+             var egg2 = egg.clone();
+             egg2.addTo(stage);
+
+
+	// 14. Animate the Circle from 0 transparency to 1 transparency in 1 second.  [2]
+
+
+		circle.alp(0).animate({alpha:1}, 1000);  // ------------------------ STILL CONFUSED ABOUT obj{} in animate ????? when do I need {} ---- ????  ------//
+
+
+
+		      }); // end load assets
+
+
+
+	// 15. Which parameter would we use to do something when the animation is done? [1]
+
+
+           // call to call a function
+
+
+	// 16. Other than a Button, name THREE components that help with interface.  [3]
+
+
+
+       // Label, Dial, Load.
+          
+       //ANSWER: Label, Slider, Tabs, CheckBox, RadioButtons, ColorPicker,
+	  //         Waiter, Indicator, Pad, Stepper, Dial, Window, Pane
+
+
+
+	// 17. Make a configuration object {} that holds the following three properties [2]
+	//     min, max, step with values of 0, 100, 2
+
+      var obj = {min: 0,
+      	         max:100,
+      	         step: 2};
+
+	stage.update(); // this is needed to show any changes
+
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>IC Practice - Canvas</title>
+
+<!-- Welcome to ZIM at http://zimjs.com - Code Interactive Media Pizzazz! 	        -->
+<!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS http://createjs.com -->
+<!-- Founded by Inventor Dan Zen - http://danzen.com - Canadian New Media Award Winner 	-->
+<!-- ZIM is free to use. You can donate to help improve ZIM at http://zimjs.com/donate 	-->
+
+<script src="libraries/createjs.min.js"></script>
+<script>
+	var zon = true; // set to false to turn off console messages from zim
+	var zns = false; // set to true to require zim namespace - eg. new zim.Frame()
+</script>
+<script src="libraries/zim_6.7.3_doc.js"></script>
+<!-- use zimjs.com/code/distill for minified individual functions! -->
+
+<script>
+
+// SCALING OPTIONS
+// scaling can have values as follows with full being the default
+// "fit"	sets canvas and stage to dimensions and scales to fit inside window size
+// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
+// "full"	sets stage to window size with no scaling
+// "tagID"	add canvas to HTML tag of ID - set to dimensions if provided - no scaling
+
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+
+// as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
+var frame = new Frame(scaling, width, height);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+    frame.outerColor = frame.grey;
+    frame.color = frame.light;
+
+
+	// CANVAS BASICS
+
+	// 1. Briefly define the canvas that we have been using.  [1]
+
+
+
+
+
+	// 2. Make a green Circle with radius of 20 and store it in a variable. [3]
+
+
+
+
+
+	// 3. Add the Circle to the stage in THREE different ways. [3]
+
+
+
+
+
+
+
+
+
+	// 4. Outline the circle on the stage to see the bounds, origin and registration
+	// Which shape is registration?
+	// What is the x and y value of the top left corner of the bounds of the shape [3]
+
+
+
+
+
+
+
+
+
+
+
+	// 5. Move the Circle to 100, 100 and make it half transparent and twice as big.
+	// do this without chaining using properties and with chaining using methods  [3]
+
+
+
+
+
+
+	// 6. What command is needed to make the above changes visible?  [1]
+
+
+
+
+
+
+	// 7. Make a Container as big as the stage and add it to the stage. [2]
+	//    Call the container holder.
+
+
+
+
+
+
+
+	// 8. Make a Button with size 200, 200 and a label of "REMOVE"  [3]
+	//    Center the button in the container.
+
+
+
+
+
+
+	// 9. Put a click event on the Button to remove the button from the holder [2]
+
+
+
+
+
+
+
+
+
+	// 10. Write the line of code to load an image called egg.jpg in the assets folder. [2]
+
+
+
+
+
+
+	// 11. Assuming ALL your previous code is in the frame.on("complete", function(){});  [2]
+	//     Write the code to add the egg.jpg asset to the container at position 500, 500
+
+
+
+
+
+
+
+
+
+
+	// 12. Make the egg draggable.  [1]
+
+
+
+
+
+
+	// 13. How would we make a copy of the egg?  [1]
+
+
+
+
+
+
+	// 14. Animate the Circle from 0 transparency to 1 transparency in 1 second.  [2]
+
+
+
+
+
+
+	// 15. Which parameter would we use to do something when the animation is done? [1]
+
+
+
+
+
+	// 16. Other than a Button, name THREE components that help with interface.  [3]
+
+
+
+
+
+
+	// 17. Make a configuration object {} that holds the following three properties [2]
+	//     min, max, step with values of 0, 100, 2
+
+
+
+
+	stage.update(); // this is needed to show any changes
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Tuesday Build Test Tutorial</title>
+
+<!-- Welcome to ZIM at http://zimjs.com - Code Interactive Media Pizzazz! 	        -->
+<!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS http://createjs.com -->
+<!-- Founded by Inventor Dan Zen - http://danzen.com - Canadian New Media Award Winner 	-->
+<!-- ZIM is free to use. You can donate to help improve ZIM at http://zimjs.com/donate 	-->
+
+<script src="https://d309knd7es5f10.cloudfront.net/createjs.min.js"></script>
+<script>
+	var zon = true; // set to false to turn off console messages from zim
+	var zns = false; // set to true to require zim namespace - eg. new zim.Frame()
+</script>
+<script src="https://d309knd7es5f10.cloudfront.net/zim_6.7.3.js"></script>
+<!-- use zimjs.com/code/distill for minified individual functions! -->
+
+<script>
+
+// SCALING OPTIONS
+// scaling can have values as follows with full being the default
+// "fit"	sets canvas and stage to dimensions and scales to fit inside window size
+// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
+// "full"	sets stage to window size with no scaling
+// "tagID"	add canvas to HTML tag of ID - set to dimensions if provided - no scaling
+
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+
+// as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
+var frame = new Frame(scaling, width, height);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+    frame.outerColor = "#444";
+    frame.color = "#ddd";
+
+    // see http://zimjs.com/code/learn.html for video and code tutorials
+    // see http://zimjs.com/code/docs.html for documentation
+    // see http://zimjs.com/code/bits.html for 64 Interactive Media techniques
+
+    // put your code here (you can delete this sample code)
+
+    var triangle = new Triangle(200, 200, 200, frame.blue)
+       .centerReg(stage);
+       // .cur() cursor 
+  
+    
+    
+    
+    zog("ready from ZIM Frame 2"); 
+    
+
+    triangle.cursor = "crosshair"; 
+
+    triangle.on("click", function(){
+
+        triangle.animate(
+        {obj:
+                    {y:-100}, //nested brackets object happens to be a property, with its own set of properties
+                    time: 500,
+                    ease: "backIn",
+                    call:function(){
+                        zog("text");
+                        var textArea = new TextArea({
+                            placeholder:"Enter Name",
+                            color: frame.blue
+
+                        }) // end of textarea
+                    }
+    
+        });
+
+
+    }); //end of click
+
+
+//------------------------------------------------------------------------------------------------------------------------//
+
+
+
+    // MAKE AN ARRAY with 5 different radiuses
+
+   var r = [10, 50, 33, 69, 55];
+
+
+
+   loop(r, function(radius, i) {
+    zog("radius");
+    // make circle based on radius
+   });
+
+
+
+   
+
+
+
+
+
+    
+
+    stage.update(); // this is needed to show any changes
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>

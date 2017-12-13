@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>IC Practice - JavaScript Answers</title>
+
+<!-- Welcome to ZIM at http://zimjs.com - Code Interactive Media Pizzazz! 	        -->
+<!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS http://createjs.com -->
+<!-- Founded by Inventor Dan Zen - http://danzen.com - Canadian New Media Award Winner 	-->
+<!-- ZIM is free to use. You can donate to help improve ZIM at http://zimjs.com/donate 	-->
+
+<script src="libraries/createjs.min.js"></script>
+<script>
+	var zon = true; // set to false to turn off console messages from zim
+	var zns = false; // set to true to require zim namespace - eg. new zim.Frame()
+</script>
+<script src="libraries/zim_6.7.3_doc.js"></script>
+<!-- use zimjs.com/code/distill for minified individual functions! -->
+
+<script>
+
+// SCALING OPTIONS
+// scaling can have values as follows with full being the default
+// "fit"	sets canvas and stage to dimensions and scales to fit inside window size
+// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
+// "full"	sets stage to window size with no scaling
+// "tagID"	add canvas to HTML tag of ID - set to dimensions if provided - no scaling
+
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+
+// as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
+var frame = new Frame(scaling, width, height);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+    frame.outerColor = frame.grey;
+    frame.color = frame.light;
+
+
+// JAVASCRIPT BASICS
+
+// Q1. Declare a variable called test on one line - do not assign anything.  [1]
+
+	var test;
+
+// Q2. Assign a String that says READY to the variable from Q1 - do not re-declare. [1]
+
+	test = "READY";
+
+// Q3. On one line, assign an estimated percent Number to a declared varible, mark. [1]
+
+	var mark = 100;
+
+// Q4. Make a conditional so that if your mark is less than 80 you log to the console:
+//     Perhaps if I am ___________ I should get more than ____________
+//     Where you put the value of the test variable (Q1 & Q2) in the first blank
+//     And you put the value of the mark variable (Q3) in the second blank.  [1]
+
+    	if (mark < 80) {
+    		zog("Perhaps if I am " + test + " I should get more than " + mark);
+    		// or console.log()
+    	}
+
+// Q5. What is it called when you join Strings or Numbers together?  (The long word!) [1]
+
+	// concatenation
+
+// Q6. Make a conditional that checks to see if test is equal to the String READY
+// and if so then increases your mark by 5 otherwise decreases your mark by 2.  [2]
+
+    	if (test == "READY") {
+    		mark += 5; // or mark = mark + 5;
+    	} else {
+    		mark -= 2; // or mark = mark - 2;
+    	}
+
+// Q7. Make an Array that holds 5 Numbers - any Numbers and assign it to a variable, nums [2]
+
+	var nums = [22, 4.3, -1, 5, 0];
+
+// Q8. Loop through the array with a loop and add up the numbers - you may need a variable!
+//     After the loop log to the console the total.  [3]
+
+    	var total = 0;
+    	for (var i=0; i<nums.length; i++) {
+    		total += nums[i];
+    	}
+    	zog(total);
+
+		// ZIM LOOP:
+
+		var total = 0;
+		loop(nums, function(num) {
+			total += num;
+		});
+		zog(total);
+
+
+// Q9. Loop again backwards through the numbers array and subtract the numbers from the total of Q8.
+
+	var total2 = total;
+	for (var i=nums.length-1; i>=0; i--) {
+		total2 -= nums[i];
+	}
+	zog(total2);
+
+	// ZIM LOOP:
+
+	loop(nums, function(num) {
+		total -= num;
+	}, true); // this parameter reverses loop when true
+	zog(total);
+
+
+
+// Q10. Make a variable called city hold an Object literal with the following properties:
+//      name, mayor and population.  Add values of your choosing to the properties.  [2]
+
+     var city = {name:"Dundas", mayor:"Albert S. Edwards", population:24702};
+
+
+// Q11. Show TWO ways that you can access the mayor from your city in Q10.  [2]
+
+	city.mayor
+	city["mayor"]
+
+
+// Q12. Add a property to the city Object in Q10 called streets and make this
+//      an Array of THREE street names. [1]
+
+     city.streets = ["King St W", "Hatt St", "Ogilvie St"];
+
+
+// Q13. Now use the push method of an Array to add a forth street name to streets above (Q12)  [1]
+
+	city.streets.push("Old Ancaster Rd");
+
+
+// Q14. Assign the length of the streets Array (Q12, Q13) to a variable length
+//      Do not hard code - in other words, do not put length = 4. [1]
+
+     var length = city.streets.length;
+
+
+// Q15. CIRCLE the TRUE statements below:  [3]
+//
+//      * A. You can access a variable declared outside a function from within a function
+//
+//      B. You can access a variable declared inside a function from outside a function
+//
+//      C. If you do not declare a variable in a function it is automatically a global variable
+//
+//      * D. We want to declare variables so they do not interfere with global variables
+
+
+// Q16. Write a time out to call a function called findMe after 2 seconds.  [2]
+
+	function findMe() {
+		zog("findMe");
+	}
+
+	setTimeout(findMe, 2000);
+
+	// OR ZIM TIMEOUT
+
+	timeout(2000, findMe);
+
+
+// Q17. Write an interval to call a function literal (anonymous) every half a second [2]
+
+	setInterval(function() {}, 500);
+
+	// OR ZIM INTERVAL
+
+	interval(500, function() {});
+
+
+
+// Q18. How would I stop the interval from running?  [1]
+//
+// 	assign it to a variable to collect an id - say, intervalID
+// 	then clearInterval(intervalID)
+
+//  OR ZIM INVERVAL:
+
+	id = interval(500, function() {zog("running");});
+	id.clear();
+
+// also
+	id.pause(true);
+	id.pause(false);
+
+// and
+// PROPERTIES - of ZIM intervalObject
+// time - |ZIM VEE| get or set the time for the interval (see time parameter)
+// count - get the number of times the interval has run (if immediate is true, the first count is 0)
+// total - get or set the number of times the interval will run if the total parameter is set - otherwise -1 for infinite
+// paused - get the paused state of the interval (see pause() method)
+// pauseTimeLeft - if paused, get how much time is left once unpaused
+
+
+// Q19. Use the on() method to capture a mouse down event on an existing object called ball.
+//      Make the event call a function that will move the ball's x position over 100 each time.  [3]
+
+	var ball = new Circle().center(stage);
+	ball.on("mousedown", function() {
+		ball.x += 100;
+		stage.update();
+	});
+
+
+// Q20. How would I make it move the ball to a random y position between 100 and 500? [1]
+
+
+	ball.y = 100 + Math.random() * (500-100);
+
+	// OR WITH ZIM
+
+	ball.y = rand(100, 500); // this function does that calculation above
+
+
+
+	stage.update(); // this is needed to show any changes
+
+}); // end of ready
+
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>
