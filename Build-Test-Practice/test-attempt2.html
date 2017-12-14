@@ -1,0 +1,225 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Attempt 2 - Build Test</title>
+
+<script src="libraries/createjs.min.js"></script>
+<script>
+	var zon = true; // set to false to turn off console messages from zim
+	var zns = false; // set to true to require zim namespace - eg. new zim.Frame()
+</script>
+<script src="libraries/zim_6.7.1_doc.js"></script>
+<!-- use zimjs.com/code/distill for minified individual functions! -->
+
+<script>
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1024;
+var height = 768;
+
+// as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
+var frame = new Frame(scaling, width, height);
+frame.on("ready", function() {
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+    frame.outerColor = frame.grey;
+    frame.color = frame.light;
+
+	// SHERIDAN IM - INTERACTIVE CODING - Build Test
+	// The test is closed Internet but references on your computer are fine - no communication obviously
+	// The test is 3 hours and marked out of 50 marks
+	// See the Demonstration Video of what you are building
+	// There are FIVE sections that can be made independently
+	// Each section is worth 10 marks despite being different levels of difficulty
+	// Add comments to your broken code to help receive part marks
+	// Note: Part 0 will be scored as part of Part 1
+
+	// VARIABLES AND FUNCTIONS
+	// Each part has recommended variables that can be used and may be needed across functions
+	// You are welcome to use your own variables and more variables in the functions if needed
+	// Each part has a function so you can build independently and comment out other function calls
+	// The final code should call the next function at the proper time - such as after animation completes, etc.
+	// You are welcome to completely remove all the functions and code your own way if you desire
+	// Best of luck!
+
+
+	// PART 0
+	// load all the assets in the assets folder
+	// when the asset loading is complete, run the PART 1 - PART 5 code
+	// then close your asset event down at the bottom where it says PART 0 CONTINUED
+
+	// put asset load code here
+     
+    frame.loadAssets(["book.json", "book.png", "MullerBold.otf", "peanuts.jpg", "trocadaro.ttf"], "assets/");
+    
+    frame.on("complete", function(){
+
+
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~
+		// PART 1 - INTERFACE [10] (this mark also includes work for PART 0)
+		// Add a Label that says SWIPE and a Button that says GO to the stage
+		// You can make a round button by setting the corner parameter to half the width and height
+		// Label alpha is .5 and the Button roll color is frame.green
+		// Then go to PART 2 where we make the book and the Button event will be handled
+
+		var label; var button;
+		makeInterface(); // comment this out if you want to turn off this section, etc.
+		function makeInterface() {
+			zog("makeInterface");
+
+			// put code here
+
+			label = new Label({
+				text:"SWIPE",
+			}).alp(.5).addTo(stage).mov(450, 550);
+
+			button = new Button({
+				label:"GO",
+				rollColor:frame.green,
+				width:100,
+				height:100,
+				borderColor:frame.yellow
+			}).addTo(stage).pos(100, 100);
+
+
+			makeBook(); // comment out this code if you do not want to run the second section yet, etc.
+			stage.update();
+		} // end makeInterface
+
+
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~
+		// PART 2 - BOOK [10]
+		// A. Create a Sprite from the loaded SpriteSheet JSON file and place it over the interface from PART 1
+		// B. Create a Swiper (ZIM Control that acts like an invisible slider or dial)
+		// Set the Swiper for swiping on the stage to control the frame property of the Sprite with proper min and max
+		// HINT: The Sprite should play forwards when you swipe backwards so use the factor parameter accordingly
+		// Set the sensitivity so the book animates slower (or requires bigger swipes) than the default
+		// C. Make a click event for the button to do the following:
+		// 		Set the swiper's enabled property to false
+		//		Remove the button and the Label from the stage
+		//		Run the Sprite from the end frame to the start frame over 1 second
+		//		At the same time, fade out the sprite's alpha over 1 second
+		//		NOTE: Set the override property of animate to false so the fade-out does not stop the running of the sprite
+		//		When the animation is done, call STEP 3
+		// NOTE: You will be able to click through the sprite to the button which is not good
+		// An easy way to avoid this is to add a click event to the sprite that calls an empty function literal
+
+		var sprite; var swiper;
+		// makeBook(); // uncomment this code if you want to run this section but not the first section, etc.
+		function makeBook() {
+			zog("makeBook");
+
+			// put code here
+            var jsonData = frame.asset("book.json");
+
+            sprite = new Sprite({json:jsonData})
+            .center(stage)
+            .mov(0, -50)
+            .outline(frame.green);
+
+            swiper = new Swiper({
+            	swipeOn:stage,
+            	target:sprite,
+            	property:"frame",
+            	min:0,
+            	max:18,
+            	sensitivity:1,
+            	factor:-1,
+            	// integer:true NOT SURE WHAT THIS IS FOR
+            });
+
+			makeSquiggle();
+			stage.update()
+		} // end makeBook
+
+
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~
+		// PART 3 - SQUIGGLE [10]
+		// Make a Label that says DRAW A PEANUT and fade the alpha in to .5 over 1 second
+		// then rewind the animation to fade the animation out after rewind waiting for 1 second (hint hint)
+		// Make a Squiggle of length 500 with 6 points and animate it in over 700 ms
+		// Make an event so when you pressup on the squiggle it checks to see if the first and last point are hitting
+		// You can access the points using the squiggle's points property
+		// This gives you an array of points, each element holds an array in which the circle object can be found - see docs
+		// You want to test if the first and last points' circles are hitting
+		// If they are hitting then remove the squiggle and go to PART 4
+
+		var instructions; var squiggle;
+		// makeSquiggle();
+		function makeSquiggle() {
+			zog("makeSquiggle");
+
+			// put code here
+
+
+			makeBacking();
+			stage.update();
+		} // end makeSquiggle
+
+
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~
+		// PART 4 - BACKING [10]
+		// Make a backing Rectangle the size of the stage and frame.dark
+		// Animate this in over 1 second
+		// Create a Label that says PEAUNUT*STORY* with font Trocadaro and frame.light
+		// DO NOT add this to the stage but rather pass it in to a ZIM Tile
+		// The Tile should cover the stage and have an alpha of .1
+		// Cache the tile so all these labels do not take up processing
+		// Then go to STEP 5
+
+		var backing; var tile;
+		// makeBacking();
+		function makeBacking() {
+			zog("makeBacking");
+
+			// put code here
+
+
+			makeBlob();
+			stage.update();
+		} // end makeBacking
+
+
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~
+		// PART 5 [10]
+		// A. Remove the last element of the squiggle's points array using the JavaScript pop() method
+		// Make a Blob that has the shape of the Squiggle
+		// by passing the points from the squiggle's recordPoints() method to the Blob's points parameter
+		// NOTE: just make a plain Blob and center it on the stage if you do not have the squiggle working yet
+		// Hide the controls and do not let the Blob toggle the controls
+		// Position the Blob at the position of the Squiggle
+		// Set the alpha of the Blob to .01 so it can receive interaction but not be seen
+		// Set the drag of the Blob so that it drags the whole blob and not its children
+		// Also, it should not come up on top and if you want, you can make it slide when you let go
+		// Set the cursor property on the shape of the blob (not the blob) to a pointer to indicate it can be dragged
+		// B. Add the peaunuts image to the stage and set its mask to the blob using setMask()
+
+		var blob; var peanuts;
+		// makeBlob();
+		function makeBlob() {
+			zog("makeBlob");
+
+			// put code here
+
+
+			stage.update();
+		} // end makeBlob
+
+
+      // PART 0 CONTINUED
+	}); // put end of asset load code here
+
+
+}); // end of ready
+
+</script>
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>
